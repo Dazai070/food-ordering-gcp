@@ -1,0 +1,2207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FoodGalaxy – Dream Food Ordering App</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Poppins', sans-serif;
+    background: radial-gradient(circle at top, #ffcf71 0, #f48fb1 28%, #3f51b5 70%, #121212 100%);
+    color: #f5f5f5;
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  /* ---------- LIGHT THEME OVERRIDE ---------- */
+  body.light-theme {
+    background: #f5f5f5;
+    color: #222;
+  }
+  body.light-theme header {
+    background: rgba(255,255,255,0.9);
+    border-bottom-color: rgba(0,0,0,0.08);
+  }
+  body.light-theme nav {
+    background: rgba(250,250,250,0.95);
+    border-bottom-color: rgba(0,0,0,0.1);
+  }
+  body.light-theme .glass-card,
+  body.light-theme .menu-item,
+  body.light-theme .cuisine-card {
+    background: rgba(255,255,255,0.95);
+    border-color: rgba(0,0,0,0.08);
+    color: #222;
+  }
+  body.light-theme table {
+    background: rgba(255,255,255,0.95);
+  }
+  body.light-theme th {
+    background: rgba(0,0,0,0.06);
+    color: #333;
+  }
+  body.light-theme footer {
+    background: #eeeeee;
+    color: #444;
+    border-top-color: rgba(0,0,0,0.1);
+  }
+  body.light-theme .feature-card,
+  body.light-theme .order-card {
+    background: rgba(255,255,255,0.95);
+    border-color: rgba(0,0,0,0.1);
+  }
+  body.light-theme .home-pill {
+    background: rgba(0,0,0,0.05);
+    border-color: rgba(0,0,0,0.12);
+  }
+  body.light-theme .phone-mock {
+    background: radial-gradient(circle at top, #e0e0e0 0, #bdbdbd 60%);
+    border-color: rgba(0,0,0,0.18);
+  }
+  body.light-theme .login-card {
+    background: rgba(255,255,255,0.96);
+    border-color: rgba(0,0,0,0.16);
+    color: #222;
+  }
+  body.light-theme .login-card input {
+    background: rgba(0,0,0,0.04);
+    border-color: rgba(0,0,0,0.2);
+    color: #222;
+  }
+
+  header {
+    text-align: center;
+    padding: 25px 20px;
+    background: rgba(10, 10, 10, 0.75);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 2.4em;
+    color: #ffea00;
+    letter-spacing: 1px;
+  }
+  header p {
+    margin: 5px 0 0 0;
+    font-size: 0.98em;
+    color: #e0e0e0;
+  }
+  header p span {
+    color: #ffeb3b;
+    font-weight: 600;
+  }
+
+  nav {
+    text-align: center;
+    background: rgba(18, 18, 18, 0.85);
+    padding: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  nav a {
+    color: #f5f5f5;
+    margin: 0 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.25s;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  nav a:hover { 
+    color: #ffeb3b; 
+    text-shadow: 0 0 6px rgba(255,235,59,0.8);
+  }
+  nav .nav-meta {
+    font-size: 0.8rem;
+    color: #ffeb3b;
+    margin-left: 8px;
+  }
+  nav select {
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(0,0,0,0.5);
+    color: #f5f5f5;
+    font-size: 0.8rem;
+  }
+  body.light-theme nav select {
+    background: #ffffff;
+    color: #222;
+    border-color: rgba(0,0,0,0.2);
+  }
+
+  .page { 
+    display: none; 
+    padding: 25px 20px; 
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .active { display: block; }
+
+  .glass-card {
+    background: rgba(18,18,18,0.78);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .menu-grid, .cuisine-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 18px;
+  }
+
+  .menu-item, .cuisine-card {
+    background: rgba(18,18,18,0.9);
+    border-radius: 18px;
+    padding: 14px;
+    width: 230px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.7);
+    border: 1px solid rgba(255,255,255,0.12);
+    transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+    position: relative;
+  }
+
+  .menu-item:hover, .cuisine-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.85);
+    border-color: #ffeb3b;
+  }
+
+  .menu-item h3, .cuisine-card h3 {
+    margin: 10px 0;
+  }
+
+  .category-tag {
+    font-size: 0.72rem;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #ff9800, #ff5252);
+    color: #1b1b1b;
+    display: inline-block;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .menu-item img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 8px;
+  }
+
+  .cuisine-card img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin: 8px 0;
+  }
+
+  .fav-btn {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: rgba(0,0,0,0.6);
+    color: #ffeb3b;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    border: 1px solid rgba(255,255,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .fav-btn.active {
+    background: #ffeb3b;
+    color: #1b1b1b;
+  }
+
+  button {
+    background: linear-gradient(90deg, #ff9800, #ff5722);
+    color: #1b1b1b;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.25s;
+    font-size: 0.9rem;
+  }
+  button:hover { 
+    background: linear-gradient(90deg, #ffeb3b, #ff9800); 
+    color: #000;
+    box-shadow: 0 0 10px rgba(255,235,59,0.7);
+  }
+
+  .ghost-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.35);
+    color: #f5f5f5;
+  }
+  .ghost-btn:hover {
+    background: rgba(255,255,255,0.08);
+    color: #ffeb3b;
+  }
+  body.light-theme .ghost-btn {
+    border-color: rgba(0,0,0,0.4);
+    color: #222;
+  }
+  body.light-theme .ghost-btn:hover {
+    background: rgba(0,0,0,0.06);
+    color: #000;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(18,18,18,0.9);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+  }
+  th, td {
+    padding: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    text-align: center;
+    font-size: 0.9rem;
+  }
+  th { 
+    color: #ffeb3b; 
+    background: rgba(0,0,0,0.7);
+  }
+
+  footer {
+    background: rgba(0,0,0,0.85);
+    color: #bdbdbd;
+    padding: 18px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    margin-top: 40px;
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 768px) {
+    header h1 { font-size: 2rem; }
+    .page { padding: 15px; }
+  }
+
+  /* ---------- HOME PAGE EXTRAS ---------- */
+
+  .home-hero {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+
+  .home-hero-left {
+    flex: 1 1 280px;
+  }
+
+  .home-hero-right {
+    flex: 1 1 260px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .home-pill {
+    display: inline-block;
+    font-size: 0.8rem;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    margin-bottom: 10px;
+  }
+
+  .brand-accent {
+    color: #ffea00;
+  }
+
+  .home-hero-left h2 {
+    margin: 4px 0 8px;
+    font-size: 2rem;
+  }
+
+  .home-hero-left p {
+    font-size: 0.95rem;
+    max-width: 480px;
+    color: #e0e0e0;
+  }
+
+  .home-cta-row {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+  }
+
+  .home-stats {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+    font-size: 0.8rem;
+  }
+  .home-stats div {
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+    min-width: 70px;
+  }
+  .home-stats strong {
+    display: block;
+    font-size: 1.1rem;
+    color: #ffeb3b;
+  }
+
+  .phone-mock {
+    width: 260px;
+    border-radius: 26px;
+    padding: 10px 10px 16px;
+    background: radial-gradient(circle at top, #3f51b5 0, #121212 60%);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.9);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .phone-header {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .phone-header .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.35);
+  }
+
+  .phone-body h4 {
+    margin: 4px 0 10px;
+    font-size: 0.95rem;
+  }
+
+  .phone-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px;
+    font-size: 0.8rem;
+  }
+
+  .phone-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 8px;
+    margin-bottom: 6px;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.45);
+  }
+
+  .phone-btn {
+    width: 100%;
+    font-size: 0.85rem;
+    padding: 7px 0;
+  }
+
+  .home-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .home-sub h3 {
+    margin-top: 0;
+  }
+
+  .feature-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 10px;
+  }
+
+  .feature-card {
+    flex: 1 1 180px;
+    padding: 12px;
+    border-radius: 14px;
+    background: rgba(0,0,0,0.7);
+    border: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.85rem;
+  }
+
+  .feature-card h4 {
+    margin: 0 0 4px;
+    font-size: 0.9rem;
+    color: #ffeb3b;
+  }
+
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .chip {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.7);
+    border: 1px solid rgba(255,255,255,0.14);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .chip:hover {
+    border-color: #ffeb3b;
+    box-shadow: 0 0 8px rgba(255,235,59,0.6);
+  }
+
+  .chip-note {
+    margin-top: 6px;
+    font-size: 0.75rem;
+    color: #cfcfcf;
+  }
+
+  @media (max-width: 768px) {
+    .home-hero {
+      flex-direction: column;
+    }
+    .home-hero-right {
+      order: -1;
+    }
+  }
+
+  /* ---------- LOGIN SCREEN ---------- */
+
+  #login-screen {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at top, #3f51b5 0, #121212 70%);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9998;
+  }
+
+  .login-card {
+    background: rgba(0,0,0,0.82);
+    padding: 24px 22px;
+    border-radius: 18px;
+    max-width: 360px;
+    width: 90%;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.85);
+    border: 1px solid rgba(255,255,255,0.16);
+    text-align: center;
+  }
+
+  .login-card h2 {
+    margin-top: 0;
+    margin-bottom: 4px;
+  }
+
+  .login-card p {
+    font-size: 0.85rem;
+    color: #d3d3d3;
+    margin-top: 0;
+    margin-bottom: 14px;
+  }
+
+  .login-card label {
+    display: block;
+    text-align: left;
+    font-size: 0.8rem;
+    margin: 8px 0 4px;
+    color: #f5f5f5;
+  }
+
+  .login-card input {
+    width: 100%;
+    padding: 7px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.6);
+    color: #f5f5f5;
+    font-size: 0.85rem;
+  }
+
+  .login-card input:focus {
+    outline: none;
+    border-color: #ffeb3b;
+    box-shadow: 0 0 8px rgba(255,235,59,0.5);
+  }
+
+  .login-card button {
+    width: 100%;
+    margin-top: 14px;
+  }
+
+  /* ---------- SPLASH SCREEN ---------- */
+
+  #splash-screen {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at top, #ffcf71 0, #f48fb1 28%, #3f51b5 70%, #121212 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    flex-direction: column;
+    color: #ffeb3b;
+  }
+  #splash-logo {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+  #splash-sub {
+    font-size: 0.9rem;
+    color: #f5f5f5;
+    margin-bottom: 16px;
+  }
+  .splash-loader {
+    width: 120px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.4);
+    overflow: hidden;
+  }
+  .splash-loader-inner {
+    width: 40px;
+    height: 100%;
+    border-radius: 999px;
+    background: #ffeb3b;
+    animation: slide 1.2s infinite;
+  }
+  @keyframes slide {
+    0% { transform: translateX(-40px); }
+    50% { transform: translateX(80px); }
+    100% { transform: translateX(-40px); }
+  }
+
+  /* ---------- ORDER SUCCESS ---------- */
+
+  .success-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 3px solid #4caf50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    font-size: 2rem;
+  }
+
+  .order-meta {
+    font-size: 0.85rem;
+    color: #cfcfcf;
+    margin-bottom: 10px;
+  }
+
+  .order-items-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.85rem;
+  }
+
+  .order-items-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* ---------- ORDER HISTORY ---------- */
+
+  .order-card {
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.7);
+    border: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.85rem;
+  }
+
+  .order-card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .order-card-items {
+    margin: 6px 0;
+  }
+
+  .order-card-items span {
+    display: inline-block;
+    margin-right: 6px;
+  }
+
+  /* ---------- WATERMARK ---------- */
+
+  .watermark {
+    position: fixed;
+    right: 12px;
+    bottom: 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    background: rgba(0,0,0,0.65);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #f5f5f5;
+    backdrop-filter: blur(6px);
+    z-index: 999;
+  }
+
+  body.light-theme .watermark {
+    background: rgba(255,255,255,0.9);
+    border-color: rgba(0,0,0,0.12);
+    color: #222;
+  }
+
+  /* ---------- OFFLINE BANNER ---------- */
+
+  #offline-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #f44336;
+    color: #fff;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    text-align: center;
+    z-index: 10000;
+    display: none;
+  }
+
+  /* ---------- SEARCH BAR ---------- */
+
+  .search-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+    align-items: center;
+  }
+  .search-row input {
+    flex: 1;
+    min-width: 180px;
+    padding: 7px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(0,0,0,0.5);
+    color: #f5f5f5;
+    font-size: 0.85rem;
+  }
+  body.light-theme .search-row input {
+    background: rgba(0,0,0,0.03);
+    border-color: rgba(0,0,0,0.25);
+    color: #222;
+  }
+
+  /* ---------- PROFILE & ADDRESS ---------- */
+
+  .profile-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .profile-col {
+    flex: 1 1 260px;
+  }
+  .profile-col label {
+    font-size: 0.8rem;
+    display: block;
+    margin: 6px 0 2px;
+  }
+  .profile-col input, .profile-col textarea {
+    width: 100%;
+    padding: 7px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.6);
+    color: #f5f5f5;
+    font-size: 0.85rem;
+  }
+  .profile-col textarea {
+    min-height: 70px;
+    resize: vertical;
+  }
+  body.light-theme .profile-col input,
+  body.light-theme .profile-col textarea {
+    background: rgba(0,0,0,0.03);
+    border-color: rgba(0,0,0,0.25);
+    color: #222;
+  }
+
+</style>
+</head>
+<body>
+
+<div id="offline-banner">You are offline — browsing cached data. Some actions may not work.</div>
+
+<!-- SPLASH -->
+<div id="splash-screen">
+  <div id="splash-logo">🍽️ FoodGalaxy</div>
+  <div id="splash-sub">Launching your dream food app...</div>
+  <div class="splash-loader">
+    <div class="splash-loader-inner"></div>
+  </div>
+</div>
+
+<!-- LOGIN OVERLAY -->
+<div id="login-screen">
+  <div class="login-card">
+    <h2>Welcome to FoodGalaxy</h2>
+    <p>Log in to start building your orders.</p>
+    <label for="login-name">Name</label>
+    <input id="login-name" type="text" placeholder="Enter your name" />
+
+    <label for="login-email">Email (optional)</label>
+    <input id="login-email" type="email" placeholder="name@example.com" />
+
+    <button onclick="handleLogin()">Enter the Galaxy</button>
+  </div>
+</div>
+
+<!-- MAIN APP CONTENT -->
+<div id="app-content" style="display:none;">
+
+<header>
+  <h1>🍽️ FoodGalaxy</h1>
+  <p id="header-tagline">
+    Order anything, anytime, from anywhere — your dream food app.
+    <span id="user-greeting"></span>
+  </p>
+</header>
+
+<nav>
+  <a onclick="showPage('home')" id="nav-home">Home</a>
+  <a onclick="showPage('menu')" id="nav-menu">Explore Menu</a>
+  <a onclick="showPage('cart')" id="nav-cart">Cart 🛒 (<span id="cart-count">0</span>)</a>
+  <a onclick="showPage('favorites')" id="nav-fav">Favorites</a>
+  <a onclick="showPage('orders')" id="nav-orders">My Orders</a>
+  <a onclick="showPage('calories')" id="nav-calories">Calorie Tracker</a>
+  <a onclick="showPage('profile')" id="nav-profile">Profile</a>
+  <a onclick="showPage('admin')" id="nav-admin">Admin</a>
+  <span class="nav-meta" id="nav-points">Points: <span id="loyalty-points">0</span></span>
+  <button class="ghost-btn" style="padding:4px 10px; font-size:0.8rem;" onclick="toggleTheme()">Theme</button>
+  <select id="language-select" onchange="changeLanguage(this.value)">
+    <option value="en">EN</option>
+    <option value="hi">HI</option>
+    <option value="ta">TA</option>
+  </select>
+</nav>
+
+<div id="home" class="page active">
+  <div class="glass-card home-hero">
+    <div class="home-hero-left">
+      <span class="home-pill" id="home-pill-text">Structured Food Ordering Experience</span>
+      <h2 id="home-welcome">Welcome to <span class="brand-accent">FoodGalaxy</span></h2>
+      <p id="home-desc">
+        Browse cuisines like folders, open your selections, and build your cart
+        from Indian, Italian, Chinese, Desserts, Beverages & more — all in one interface.
+      </p>
+
+      <div class="home-cta-row">
+        <button onclick="showPage('menu')" id="home-start-btn">Start Ordering</button>
+        <button class="ghost-btn" onclick="showPage('menu')" id="home-explore-btn">Explore Cuisines</button>
+      </div>
+
+      <div class="home-stats">
+        <div>
+          <strong>70+</strong>
+          <span id="home-stat-dishes">Dishes</span>
+        </div>
+        <div>
+          <strong>9</strong>
+          <span id="home-stat-cuisines">Cuisines</span>
+        </div>
+        <div>
+          <strong>∞</strong>
+          <span id="home-stat-combos">Combinations</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-hero-right">
+      <div class="phone-mock">
+        <div class="phone-header">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+        <div class="phone-body">
+          <h4 id="home-tonight">Tonight’s Picks</h4>
+          <ul class="phone-list" id="tonight-list">
+            <li>
+              <span>Chicken Biryani</span>
+              <span>₹180</span>
+            </li>
+            <li>
+              <span>Peri Peri Fries</span>
+              <span>₹110</span>
+            </li>
+            <li>
+              <span>Bubble Tea</span>
+              <span>₹140</span>
+            </li>
+          </ul>
+          <button onclick="showPage('menu')" class="phone-btn" id="home-build-btn">
+            Build Your Order
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="home-sections">
+    <div class="home-sub glass-card">
+      <h3 id="home-why-title">Key Features</h3>
+      <div class="feature-row">
+        <div class="feature-card">
+          <h4 id="feat1-title">Folder-Style Browsing</h4>
+          <p id="feat1-text">Open cuisines like folders and see all dishes grouped.</p>
+        </div>
+        <div class="feature-card">
+          <h4 id="feat2-title">Instant Cart View</h4>
+          <p id="feat2-text">Live cart preview with quantity controls and totals.</p>
+        </div>
+        <div class="feature-card">
+          <h4 id="feat3-title">Admin Management</h4>
+          <p id="feat3-text">Add new dishes from the Admin panel without reload.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-sub glass-card">
+      <h3 id="home-shortcuts-title">Quick Access Shortcuts</h3>
+      <div class="chip-row">
+        <span class="chip" onclick="jumpToCuisine('Indian')">Indian</span>
+        <span class="chip" onclick="jumpToCuisine('Fast Food')">Fast Food</span>
+        <span class="chip" onclick="jumpToCuisine('Desserts')">Desserts</span>
+        <span class="chip" onclick="jumpToCuisine('Beverages')">Beverages</span>
+      </div>
+      <p class="chip-note" id="home-shortcuts-note">
+        Select a category to open that cuisine directly.
+      </p>
+    </div>
+
+    <div class="home-sub glass-card">
+      <h3>Most Ordered Today</h3>
+      <p style="font-size:0.85rem;">Top trending dishes based on your recent orders.</p>
+      <div class="menu-grid" id="most-ordered-grid">
+        <!-- populated from JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="menu" class="page">
+  <div class="glass-card">
+    <h2>Explore Menu</h2>
+    <div class="search-row">
+      <input id="search-input" type="text"
+        placeholder="Search by name, cuisine or try 'veg', 'biryani', 'under 150'..."
+        oninput="handleSearchInput()" />
+      <button class="ghost-btn" onclick="clearSearch()">Clear</button>
+    </div>
+    <div id="menu-container"></div>
+  </div>
+</div>
+
+<div id="cart" class="page">
+  <div class="glass-card">
+    <h2>Your Cart</h2>
+    <table id="cart-table">
+      <tr>
+        <th>Item</th>
+        <th>Price (₹)</th>
+        <th>Quantity</th>
+        <th>Total (₹)</th>
+        <th>Actions</th>
+      </tr>
+    </table>
+    <h3 id="cart-total" style="text-align:right;">Total: ₹0</h3>
+    <p id="cart-discount" style="text-align:right; font-size:0.85rem; margin:2px 0;"></p>
+    <p id="cart-calories" style="text-align:right; margin-top:4px; font-size:0.85rem; opacity:0.9;">
+      Cart Calories (approx): 0 kcal
+    </p>
+    <div style="margin-top:10px; display:flex; flex-wrap:wrap; gap:8px; justify-content:space-between; align-items:center;">
+      <div style="font-size:0.85rem;">
+        <label>Promo Code:</label>
+        <input id="promo-code" type="text" style="padding:4px 8px; border-radius:8px; border:1px solid rgba(255,255,255,0.3); background:rgba(0,0,0,0.5); color:#f5f5f5; font-size:0.8rem;" />
+        <button style="padding:5px 10px; font-size:0.8rem;" onclick="applyPromo()">Apply</button>
+        <span style="font-size:0.75rem; opacity:0.8; display:block; margin-top:3px;">
+          <p style="color: #ffae42; font-weight: 600;">
+          Try these promo codes: SHIRLYN (50% OFF), RISHI (10% OFF)
+          </p>
+
+        </span>
+      </div>
+      <div>
+        <button onclick="checkout()" style="margin-top:10px;">Checkout</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAVORITES PAGE -->
+<div id="favorites" class="page">
+  <div class="glass-card">
+    <h2>Your Favorites</h2>
+    <p style="font-size:0.9rem;">Dishes you have marked as favorites.</p>
+    <div class="menu-grid" id="favorites-grid"></div>
+    <p id="no-favorites-msg" style="font-size:0.85rem; color:#d0d0d0; margin-top:8px;">
+      No favorites yet. Tap the star icon on any dish to add it here.
+    </p>
+  </div>
+</div>
+
+<!-- ORDER SUCCESS PAGE -->
+<div id="order-success" class="page">
+  <div class="glass-card">
+    <div class="success-icon">✔</div>
+    <h2 style="text-align:center;">Order Confirmed</h2>
+    <p class="order-meta" id="order-success-meta" style="text-align:center;"></p>
+    <ul class="order-items-list" id="order-success-items"></ul>
+    <h3 id="order-success-total" style="text-align:right; margin-top:10px;"></h3>
+    <p id="order-success-points" style="text-align:right; font-size:0.9rem; margin-top:4px;"></p>
+    <p id="order-success-calories" style="text-align:right; font-size:0.9rem; margin-top:2px;"></p>
+    <p id="order-success-eta" style="text-align:right; font-size:0.85rem; margin-top:4px; opacity:0.9;"></p>
+    <div style="margin-top:15px; display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
+      <button onclick="showPage('orders')">View Order History</button>
+      <button onclick="showPage('menu')">Order More</button>
+      <button class="ghost-btn" onclick="showPage('home')">Back to Home</button>
+      <button class="ghost-btn" onclick="printInvoice()">Print Invoice</button>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER HISTORY PAGE -->
+<div id="orders" class="page">
+  <div class="glass-card">
+    <h2>Order History</h2>
+    <p id="no-orders-msg" style="font-size:0.9rem; color:#d0d0d0;">
+      No orders placed yet. Place an order from the menu to see it here.
+    </p>
+    <div id="orders-list"></div>
+  </div>
+</div>
+
+<!-- CALORIE TRACKER PAGE -->
+<div id="calories" class="page">
+  <div class="glass-card">
+    <h2>Calorie Tracker</h2>
+    <p style="font-size:0.9rem;">
+      Track an approximate calorie count based on your completed orders and current cart.
+      Values are approximate for demonstration purposes.
+    </p>
+    <div style="margin-top:12px;">
+      <label style="font-size:0.85rem;">Daily Calorie Target (kcal)</label><br>
+      <input id="calorie-target" type="number" value="2200" min="800" max="5000"
+        style="padding:6px 8px; border-radius:10px; border:1px solid rgba(255,255,255,0.2); background:rgba(0,0,0,0.6); color:#f5f5f5; font-size:0.85rem;"/>
+      <button style="margin-left:6px; margin-top:6px;" onclick="updateCalorieTarget()">Update Target</button>
+    </div>
+    <div style="margin-top:16px; font-size:0.9rem;">
+      <p id="calorie-summary"></p>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE & ADDRESS PAGE -->
+<div id="profile" class="page">
+  <div class="glass-card">
+    <h2>Profile & Delivery Details</h2>
+    <div class="profile-grid">
+      <div class="profile-col">
+        <h3>Profile</h3>
+        <label>Name</label>
+        <input id="profile-name" type="text" />
+        <label>Email</label>
+        <input id="profile-email" type="email" />
+        <label>Total Orders</label>
+        <input id="profile-orders" type="text" disabled />
+        <label>Loyalty Points</label>
+        <input id="profile-points" type="text" disabled />
+        <label>Total Calories from Orders (approx)</label>
+        <input id="profile-calories" type="text" disabled />
+        <button style="margin-top:10px;" onclick="saveProfile()">Save Profile</button>
+      </div>
+      <div class="profile-col">
+        <h3>Delivery Address</h3>
+        <label>Door / Flat No</label>
+        <input id="addr-door" type="text" />
+        <label>Street</label>
+        <input id="addr-street" type="text" />
+        <label>City</label>
+        <input id="addr-city" type="text" />
+        <label>Pincode</label>
+        <input id="addr-pin" type="text" />
+        <label>Delivery Instructions</label>
+        <textarea id="addr-notes"></textarea>
+        <button style="margin-top:10px;" onclick="saveAddress()">Save Address</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="admin" class="page">
+  <div class="glass-card">
+    <h2>Admin Panel</h2>
+    <p>Add new dishes dynamically.</p>
+    <div>
+      <label>Name</label>
+      <input id="admin-name" type="text">
+
+      <label>Price</label>
+      <input id="admin-price" type="number">
+
+      <label>Cuisine</label>
+      <select id="admin-category">
+          <option>Indian</option>
+          <option>Fast Food</option>
+          <option>Italian</option>
+          <option>Chinese</option>
+          <option>Japanese</option>
+          <option>French</option>
+          <option>Arabic</option>
+          <option>Desserts</option>
+          <option>Beverages</option>
+      </select>
+
+      <label>Approx Calories (optional)</label>
+      <input id="admin-calories" type="number" placeholder="e.g. 300" />
+
+      <label>Image URL (optional)</label>
+      <input id="admin-image" type="text" placeholder="https://example.com/image.jpg">
+
+      <button onclick="addMenuItemFromAdmin()" style="margin-top:10px;">Add</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  FoodGalaxy · Food Ordering Web Application<br>
+  <span style="font-size:0.8rem; opacity:0.8;">
+    Designed &amp; developed by <strong>Ms. Shirlyn Danita</strong>
+  </span>
+</footer>
+
+</div> <!-- end #app-content -->
+
+<!-- FLOATING WATERMARK -->
+<div class="watermark">
+  Made by <strong>Ms. Shirlyn Danita</strong>
+</div>
+
+<script>
+  // --------- DATA STRUCTURES ---------
+
+  let menuItems = [
+    // Same data as before with calories + images
+    // (truncated explanation: full list maintained)
+    // 🇮🇳 INDIAN
+    { id: 1,  name: "Chicken Biryani", category: "Indian", price: 180, calories: 650,
+      image: "https://static.vecteezy.com/system/resources/thumbnails/024/650/050/small/gourmet-chicken-biryani-with-steamed-basmati-rice-generated-by-ai-free-photo.jpg"
+    },
+    { id: 2,  name: "Mutton Biryani", category: "Indian", price: 220, calories: 700,
+      image: "https://static.vecteezy.com/system/resources/thumbnails/024/650/050/small/gourmet-chicken-biryani-with-steamed-basmati-rice-generated-by-ai-free-photo.jpg"
+    },
+    { id: 3,  name: "Beef Biryani", category: "Indian", price: 200, calories: 720,
+      image: "https://static.vecteezy.com/system/resources/thumbnails/024/650/050/small/gourmet-chicken-biryani-with-steamed-basmati-rice-generated-by-ai-free-photo.jpg"
+    },
+    { id: 4,  name: "Egg Biryani", category: "Indian", price: 140, calories: 550,
+      image: "https://static.vecteezy.com/system/resources/thumbnails/024/650/050/small/gourmet-chicken-biryani-with-steamed-basmati-rice-generated-by-ai-free-photo.jpg"
+    },
+    { id: 5,  name: "Veg Biryani", category: "Indian", price: 130, calories: 500,
+      image: "https://static.vecteezy.com/system/resources/thumbnails/024/650/050/small/gourmet-chicken-biryani-with-steamed-basmati-rice-generated-by-ai-free-photo.jpg"
+    },
+
+    { id: 6,  name: "Dosa with Sambar & Chutney", category: "Indian", price: 60, calories: 300,
+      image: "https://images.pexels.com/photos/5560763/pexels-photo-5560763.jpeg?cs=srgb&dl=pexels-saveurssecretes-5560763.jpg&fm=jpg"
+    },
+    { id: 7,  name: "Idly with Sambar & Chutney", category: "Indian", price: 50, calories: 250,
+      image: "https://cdn.pixabay.com/photo/2017/06/16/11/38/breakfast-2408818_1280.jpg"
+    },
+    { id: 8,  name: "Paneer Butter Masala", category: "Indian", price: 160, calories: 450,
+      image: "https://myfoodstory.com/wp-content/uploads/2021/10/Paneer-Butter-Masala-1-2.jpg"
+    },
+
+    { id: 9,  name: "Naan (2 pcs)", category: "Indian", price: 40, calories: 220,
+      image: "https://media.istockphoto.com/id/1143530040/photo/indian-naan-bread-with-garlic-butter-on-wooden-table.jpg?s=612x612&w=0&k=20&c=71SgbJtnfiHUiud1oGxnhiZsx5nuivWwZt8DlIk8hi0="
+    },
+    { id: 10, name: "Butter Naan (2 pcs)", category: "Indian", price: 50, calories: 260,
+      image: "https://media.istockphoto.com/id/1143530040/photo/indian-naan-bread-with-garlic-butter-on-wooden-table.jpg?s=612x612&w=0&k=20&c=71SgbJtnfiHUiud1oGxnhiZsx5nuivWwZt8DlIk8hi0="
+    },
+    { id: 11, name: "Chapathi (3 pcs)", category: "Indian", price: 45, calories: 210,
+      image: "https://media.istockphoto.com/id/516359240/photo/bhendi-masala-or-bhindi-masala-ladies-finger-curry-with-chapati.jpg?s=612x612&w=0&k=20&c=0mGnvNM2lxl-dTTJlhAfVJE5WidxYmmvrvNs1NZUKvs="
+    },
+
+    { id: 12, name: "Curd Rice", category: "Indian", price: 70, calories: 350,
+      image: "https://media.istockphoto.com/id/1168155061/photo/curd-rice-or-thayir-sadam-is-a-delicious-south-indian-recipe-where-cooked-rice-is-mixed-with.jpg?s=612x612&w=0&k=20&c=9ayO_MCk4A6J-UIMfwFHOopJ-Lv-HdHNg99I8xReotQ="
+    },
+    { id: 13, name: "Fish Curry", category: "Indian", price: 170, calories: 400,
+      image: "https://thumbs.dreamstime.com/b/fish-curry-28687129.jpg"
+    },
+
+    { id: 14, name: "Chicken 65", category: "Indian", price: 150, calories: 480,
+      image: "https://thumbs.dreamstime.com/b/chicken-dish-garnished-lemon-served-plate-320522220.jpg"
+    },
+    { id: 15, name: "Masala Dosa", category: "Indian", price: 70, calories: 350,
+      image: "https://images.pexels.com/photos/5560763/pexels-photo-5560763.jpeg?cs=srgb&dl=pexels-saveurssecretes-5560763.jpg&fm=jpg"
+    },
+    { id: 16, name: "Sambar Rice", category: "Indian", price: 90, calories: 380,
+      image: "https://t4.ftcdn.net/jpg/04/97/27/31/360_F_497273192_FaNrcQGMMpQeBGitqp04l0XwwgXmvPmO.jpg"
+    },
+    { id: 17, name: "Gobi 65", category: "Indian", price: 120, calories: 420,
+      image: "https://t4.ftcdn.net/jpg/04/18/04/35/360_F_418043565_Lv14th6glsnvUXPiirPUChhJMrmUhJts.jpg"
+    },
+
+    // 🍔 FAST FOOD
+    { id: 18, name: "Chicken Burger", category: "Fast Food", price: 150, calories: 520,
+      image: "https://img.freepik.com/free-photo/delicious-burger-with-fresh-ingredients_23-2150857908.jpg"
+    },
+    { id: 19, name: "Veg Burger", category: "Fast Food", price: 120, calories: 450,
+      image: "https://img.freepik.com/free-photo/delicious-burger-with-fresh-ingredients_23-2150857908.jpg"
+    },
+    { id: 20, name: "Cheese Burger", category: "Fast Food", price: 140, calories: 550,
+      image: "https://img.freepik.com/free-photo/delicious-burger-with-fresh-ingredients_23-2150857908.jpg"
+    },
+
+    { id: 21, name: "Fried Chicken", category: "Fast Food", price: 170, calories: 600,
+      image: "https://media.istockphoto.com/id/452813985/photo/plate-of-fried-chicken-on-blue-plaid-towel.jpg?s=612x612&w=0&k=20&c=e_03DvZFXhvbMR5eBiflKJ2nnQnoaBnufrT37h6Wf7s="
+    },
+    { id: 22, name: "French Fries", category: "Fast Food", price: 80, calories: 350,
+      image: "https://static.vecteezy.com/system/resources/thumbnails/034/904/621/small/savory-french-fries-cuisine-freshly-prepared-to-perfection-generative-ai-photo.jpg"
+    },
+    { id: 23, name: "Wraps", category: "Fast Food", price: 130, calories: 480,
+      image: "https://img.freepik.com/free-photo/burritos-wraps-with-beef-vegetables-ai-generated-image_511042-1672.jpg?semt=ais_hybrid&w=740&q=80"
+    },
+    { id: 24, name: "Chicken Nuggets", category: "Fast Food", price: 140, calories: 430,
+      image: "https://www.licious.in/blog/wp-content/uploads/2020/12/Popcorn-Chicken.jpg"
+    },
+
+    { id: 25, name: "Peri Peri Fries", category: "Fast Food", price: 110, calories: 380,
+      image: "https://static.vecteezy.com/system/resources/thumbnails/034/904/621/small/savory-french-fries-cuisine-freshly-prepared-to-perfection-generative-ai-photo.jpg"
+    },
+    { id: 26, name: "Cheese Nachos", category: "Fast Food", price: 150, calories: 450,
+      image: "https://www.pamperedchef.com/iceberg/com/recipe/1552947-lg.jpg"
+    },
+    { id: 27, name: "Grilled Sandwich", category: "Fast Food", price: 120, calories: 420,
+      image: "https://static.toiimg.com/photo/54714340.cms"
+    },
+    { id: 28, name: "Popcorn Chicken", category: "Fast Food", price: 160, calories: 520,
+      image: "https://www.licious.in/blog/wp-content/uploads/2020/12/Popcorn-Chicken.jpg"
+    },
+
+    // 🇮🇹 ITALIAN
+    { id: 29, name: "Margherita Pizza", category: "Italian", price: 220, calories: 650,
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIibPbOeDQQscm9g-fDNdCvROokQJukg8nYQ&s"
+    },
+    { id: 30, name: "Veg Supreme Pizza", category: "Italian", price: 260, calories: 700,
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIibPbOeDQQscm9g-fDNdCvROokQJukg8nYQ&s"
+    },
+    { id: 31, name: "Chicken Pepperoni Pizza", category: "Italian", price: 300, calories: 750,
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIibPbOeDQQscm9g-fDNdCvROokQJukg8nYQ&s"
+    },
+    { id: 32, name: "Four Cheese Pizza", category: "Italian", price: 280, calories: 720,
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIibPbOeDQQscm9g-fDNdCvROokQJukg8nYQ&s"
+    },
+
+    { id: 33, name: "Pasta Alfredo", category: "Italian", price: 200, calories: 600,
+      image: "https://img.freepik.com/free-photo/penne-pasta-tomato-sauce-with-chicken-tomatoes-wooden-table_2829-19744.jpg?semt=ais_hybrid&w=740&q=80"
+    },
+    { id: 34, name: "Lasagna", category: "Italian", price: 240, calories: 650,
+      image: "https://media.istockphoto.com/id/543663322/photo/meat-lasagna.jpg?s=612x612&w=0&k=20&c=nYLF1yuCTxIMwQ0JjnAT3_fd7ZqsAds1RO4FOinimZ4="
+    },
+
+    { id: 35, name: "Garlic Bread", category: "Italian", price: 90, calories: 280,
+      image: "https://media.istockphoto.com/id/547046390/photo/garlic-bread.jpg?s=612x612&w=0&k=20&c=oArNgkbjjPKlToDnBhL7xNwU4_eJLPTaLbAlIuunHDY="
+    },
+    { id: 36, name: "Risotto", category: "Italian", price: 180, calories: 550,
+      image: "https://media.istockphoto.com/id/1197141340/photo/italian-risotto-with-spring-asparagus-and-parmesan-cheese-in-plate-on-light-background.jpg?s=612x612&w=0&k=20&c=67OY3rK4mTiuD1xGeRKdXZOifwatF2uGZkqofoJt3VU="
+    },
+
+    // 🇨🇳 CHINESE
+    { id: 37, name: "Noodles", category: "Chinese", price: 120, calories: 450,
+      image: "https://images.pexels.com/photos/2347311/pexels-photo-2347311.jpeg?cs=srgb&dl=pexels-enginakyurt-2347311.jpg&fm=jpg"
+    },
+    { id: 38, name: "Manchurian", category: "Chinese", price: 140, calories: 400,
+      image: "https://t3.ftcdn.net/jpg/07/78/62/20/360_F_778622047_jPUi1wh6gTydtsjNVDOjDscqmVJfkBwE.jpg"
+    },
+    { id: 39, name: "Fried Rice", category: "Chinese", price: 130, calories: 500,
+      image: "https://t4.ftcdn.net/jpg/00/68/53/35/360_F_68533591_guYFbtlPxbgfPJkYDGkI7NHGKFMovkvS.jpg"
+    },
+
+    { id: 40, name: "Schezwan Fried Rice", category: "Chinese", price: 150, calories: 520,
+      image: "https://t4.ftcdn.net/jpg/00/68/53/35/360_F_68533591_guYFbtlPxbgfPJkYDGkI7NHGKFMovkvS.jpg"
+    },
+    { id: 41, name: "Spring Rolls", category: "Chinese", price: 110, calories: 320,
+      image: "https://media.istockphoto.com/id/1313085999/photo/fried-vegetable-spring-rolls-with-sweet-chili-and-soya-sauce-on-wooden-board.jpg?s=612x612&w=0&k=20&c=OM1OfrBS7D4666h9eZtztqFmQW0Ch15bcMcNbYhUBIo="
+    },
+    { id: 42, name: "Kung Pao Paneer", category: "Chinese", price: 180, calories: 480,
+      image: "https://media.istockphoto.com/id/1206748835/photo/delicious-kung-pao-chicken-with-pepper-shallots-and-peanuts-in-a-wok-pan.jpg?s=612x612&w=0&k=20&c=1bZhsu-d-nUYcHdMJYFNMzRbl5MaMLH44jelULOY_HM="
+    },
+
+    // 🇯🇵 JAPANESE
+    { id: 43, name: "Ramen", category: "Japanese", price: 250, calories: 600,
+      image: "https://media.istockphoto.com/id/511792878/photo/japanese-ramen-soup-with-chicken-egg-chives-and-sprout.jpg?s=612x612&w=0&k=20&c=NRnqc3wTUlIvur2po8FWARqxDWB7EG78Z1bZ7ZcOeNY="
+    },
+    { id: 44, name: "Sushi Rolls", category: "Japanese", price: 280, calories: 420,
+      image: "https://media.istockphoto.com/id/1354366250/photo/set-of-rainbow-uramaki-sushi-rolls-with-avocado.jpg?s=612x612&w=0&k=20&c=wgFUfdRVdtW976mlii4zK_Ziy7rqEcXWPHjGZ8dO5A0="
+    },
+    { id: 45, name: "Tempura", category: "Japanese", price: 200, calories: 450,
+      image: "https://t3.ftcdn.net/jpg/04/90/45/20/360_F_490452030_SX32SiO4ytYvzCq2HDvnRpmpGfdMnjfD.jpg"
+    },
+    { id: 46, name: "Teriyaki Rice Bowl", category: "Japanese", price: 220, calories: 580,
+      image: "https://media.istockphoto.com/id/538965661/photo/shrimp-and-fried-rice-teriyaki.jpg?s=612x612&w=0&k=20&c=Cx8XonchYhOaGfWCCbfygkLusCENQY0_hQyL4qOskLg="
+    },
+
+    // 🇫🇷 FRENCH
+    { id: 47, name: "Croissant Sandwich", category: "French", price: 160, calories: 430,
+      image: "https://media.istockphoto.com/id/95380176/photo/fresh-croissant.jpg?s=612x612&w=0&k=20&c=WC9_MHOVAcCPF39ER4plI5yFmVhnO-bKqTeiXk3TKmM="
+    },
+    { id: 48, name: "Ratatouille", category: "French", price: 180, calories: 300,
+      image: "https://media.istockphoto.com/id/1180869403/photo/traditional-french-cooked-provencal-vegetable-dish-ratatouille.jpg?s=612x612&w=0&k=20&c=ROYdUxbstfC9uqdsvvkhIa32RLhADNwjI5Qx__Rbk0M="
+    },
+    { id: 49, name: "French Onion Soup", category: "French", price: 150, calories: 280,
+      image: "https://www.onceuponachef.com/images/2019/02/french-onion-soup-1.jpg"
+    },
+    { id: 50, name: "Crème Brûlée", category: "French", price: 200, calories: 420,
+      image: "https://cdn.pixabay.com/photo/2018/06/22/14/44/creme-brulee-3490886_640.jpg"
+    },
+
+    // 🇦🇪 ARABIC
+    { id: 51, name: "Shawarma", category: "Arabic", price: 170, calories: 520,
+      image: "https://img.freepik.com/free-photo/side-view-chicken-roll-grilled-chicken-lettuce-cucumber-tomato-mayo-pita_141793-4849.jpg?semt=ais_hybrid&w=740&q=80"
+    },
+    { id: 52, name: "Falafel Platter", category: "Arabic", price: 140, calories: 450,
+      image: "https://media.istockphoto.com/id/955998652/photo/homemade-chickpea-hummus-bowl-with-pita-chips-and-paprika.jpg?s=612x612&w=0&k=20&c=H3m78rhd7113mc06CqBKLH4PVn7e8AUmTes2yCQEzlY="
+    },
+    { id: 53, name: "Hummus with Pita", category: "Arabic", price: 120, calories: 380,
+      image: "https://media.istockphoto.com/id/1150350496/photo/chickpea-hummus-with-falafel-and-pita-bread.jpg?s=612x612&w=0&k=20&c=zL3KnUc7fGS6qsx5T4WqNv-XxIz176qk630bl5pjJY8="
+    },
+    { id: 54, name: "Kabsa", category: "Arabic", price: 220, calories: 650,
+      image: "https://img.freepik.com/free-photo/plate-biryani-with-bowl-rice-bowl-food-table_505751-3814.jpg?semt=ais_hybrid&w=740&q=80"
+    },
+
+    // 🍰 DESSERTS
+    { id: 55, name: "Gulab Jamun", category: "Desserts", price: 60, calories: 300,
+      image: "https://media.istockphoto.com/id/521788423/photo/gulab-jamun.jpg?s=612x612&w=0&k=20&c=oMoXZUYPBZq_N8h9yqB16HsmGF4G-oEcRwEg-K8zZ0o="
+    },
+    { id: 56, name: "Rasmalai", category: "Desserts", price: 80, calories: 320,
+      image: "https://cdn.create.vista.com/api/media/small/156987234/stock-photo-save-download-preview-angoori-rasmalai-or-anguri-ras-malai-is-an-indian-dessert-made-from"
+    },
+
+    { id: 57, name: "Chocolate Milkshake", category: "Desserts", price: 120, calories: 450,
+      image: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?fm=jpg&q=60&w=3000"
+    },
+    { id: 58, name: "Soft Serve Ice Cream", category: "Desserts", price: 90, calories: 280,
+      image: "https://img.freepik.com/free-photo/close-up-hand-holding-ice-cream_23-2149005357.jpg"
+    },
+
+    { id: 59, name: "Tiramisu", category: "Desserts", price: 150, calories: 420,
+      image: "https://thumbs.dreamstime.com/b/tiramisu-glass-cup-top-view-high-angle-stone-plate-over-black-concrete-background-hand-teaspoon-eats-copy-space-146112090.jpg"
+    },
+    { id: 60, name: "Panna Cotta", category: "Desserts", price: 160, calories: 380,
+      image: "https://media.istockphoto.com/id/1255776846/photo/raspberry-panna-cotta-with-raspberry-jelly-italian-dessert-homemade-cuisine-copy-space.jpg?s=612x612&w=0&k=20&c=TU-mPAtTafCrWcxHrtAO-HjxMkcGgOoG5E6W5l9tJkg="
+    },
+
+    { id: 61, name: "Darsaan", category: "Desserts", price: 130, calories: 360,
+      image: "https://cookwithashu.wordpress.com/wp-content/uploads/2017/06/cymera_20170613_220919.jpg?w=645"
+    },
+    { id: 62, name: "Fried Ice Cream", category: "Desserts", price: 160, calories: 450,
+      image: "https://media.istockphoto.com/id/161322270/photo/mexican-desserts.jpg?s=612x612&w=0&k=20&c=zjEId7eWhVdHr8Ksi996MdnTYu2wH706Mw_oquhzIEk="
+    },
+
+    // 🍹 BEVERAGES
+    { id: 63, name: "Masala Chai", category: "Beverages", price: 40, calories: 120,
+      image: "https://media.istockphoto.com/id/1548592042/photo/traditional-middle-eastern-beverage-indian-drink-masala-or-arabian-karak-chai-copy-space.jpg?s=612x612&w=0&k=20&c=BqGP9UNqAnK_D0kVFnZG4q08AFz3nwhhPj7pmlppED0="
+    },
+    { id: 64, name: "Sweet Lassi", category: "Beverages", price: 60, calories: 250,
+      image: "https://media.istockphoto.com/id/1365859011/photo/drink-mango-lassi-in-two-glasses-on-rustic-concrete-table-with-fresh-ripe-cut-manfo-from-above.jpg?s=612x612&w=0&k=20&c=uHnr_0raQDe2sgUYHdP5GSa2raaj3ILG4m1cmFHtVJA="
+    },
+
+    { id: 65, name: "Coke", category: "Beverages", price: 40, calories: 140,
+      image: "https://images.unsplash.com/photo-1554866585-cd94860890b7?fm=jpg&q=60&w=3000"
+    },
+    { id: 66, name: "Cold Coffee", category: "Beverages", price: 90, calories: 220,
+      image: "https://images.pexels.com/photos/1193335/pexels-photo-1193335.jpeg?cs=srgb&dl=pexels-chiecharon-1193335.jpg&fm=jpg"
+    },
+
+    { id: 67, name: "Italian Soda", category: "Beverages", price: 100, calories: 180,
+      image: "https://media.istockphoto.com/id/476124338/photo/organic-fresh-italian-soda.jpg?s=612x612&w=0&k=20&c=whb917LDKXthr6nEdJeFXXgsgM7wcWAqGUgwYKNpsSw="
+    },
+    { id: 68, name: "Espresso", category: "Beverages", price: 80, calories: 20,
+      image: "https://thumbs.dreamstime.com/b/close-up-white-espresso-coffee-cup-smoke-above-wooden-plate-roasted-coffee-beans-white-marble-table-405912995.jpg"
+    },
+
+    { id: 69, name: "Jasmine Tea", category: "Beverages", price: 70, calories: 10,
+      image: "https://www.shutterstock.com/image-photo/cup-jasmine-tea-fresh-flowers-600nw-2480865003.jpg"
+    },
+    { id: 70, name: "Bubble Tea", category: "Beverages", price: 140, calories: 320,
+      image: "https://media.istockphoto.com/id/1954460241/photo/taiwan-milk-tea-with-boba-bubble-pearl-on-plastic-disposable-cup.jpg?s=612x612&w=0&k=20&c=SUCuvZS3ZkrXE8R-09utdtOC626W7Y0nYRHBLBuf1nc="
+    },
+  ];
+
+  const cuisines = [
+    { id: "Indian",     title: "Indian",     description: "Biryanis, dosas, curries and comfort food.",
+      image: "https://media.istockphoto.com/id/922783734/photo/assorted-indian-recipes-food-various.jpg?s=612x612&w=0&k=20&c=p8DepvymWfC5j7c6En2UsQ6sUM794SQMwceeBW3yQ9M="
+    },
+    { id: "Fast Food",  title: "Fast Food",  description: "Burgers, fries, fried chicken and more.",
+      image: "https://img.freepik.com/free-photo/top-view-fast-food-meal_23-2148273108.jpg"
+    },
+    { id: "Italian",    title: "Italian",    description: "Pizzas, pastas, lasagna and garlic bread.",
+      image: "https://media.istockphoto.com/id/1227415751/photo/full-table-of-italian-meals-on-plates-pizza-pasta-ravioli-carpaccio-caprese-salad-and-tomato.jpg?s=612x612&w=0&k=20&c=0qCRhYGQw0w6ahhVX-4ezayA9r81A81cwbPDbgRlC5s="
+    },
+    { id: "Chinese",    title: "Chinese",    description: "Noodles, fried rice, manchurian and more.",
+      image: "https://media.istockphoto.com/id/545286388/photo/chinese-food-blank-background.jpg?s=612x612&w=0&k=20&c=pqOIy07YKO5PlU5VxjscwTGRrrZ8PluKMUjSOz-II60="
+    },
+    { id: "Japanese",   title: "Japanese",   description: "Ramen, sushi, tempura and rice bowls.",
+      image: "https://media.istockphoto.com/id/508032520/photo/sushi-set-nigiri-and-sashimi-with-tea.jpg?s=612x612&w=0&k=20&c=-gNB5bYMSTumWI9D09XPcVuYEsuLxkVuJKUdp-2vGIc="
+    },
+    { id: "French",     title: "French",     description: "Bakes, soups and mains.",
+      image: "https://t3.ftcdn.net/jpg/06/60/79/28/360_F_660792870_FR4linXu1K5qL72g3QHoMV4amxrZn74Z.jpg"
+    },
+    { id: "Arabic",     title: "Arabic",     description: "Shawarma, falafel, hummus and kabsa.",
+      image: "https://www.shutterstock.com/image-photo/chicken-mandy-top-view-national-600nw-2282770611.jpg"
+    },
+    { id: "Desserts",   title: "Desserts",   description: "Sweet dishes from multiple cuisines.",
+      image: "https://t3.ftcdn.net/jpg/01/76/33/14/360_F_176331484_nLHY9EoW0ETwPZaS9OBXPGbCJhT70GZe.jpg"
+    },
+    { id: "Beverages",  title: "Beverages",  description: "Hot and cold drinks to match every meal.",
+      image: "https://static.vecteezy.com/system/resources/thumbnails/026/500/574/small/summer-refreshing-beverages-photo.jpg"
+    }
+  ];
+
+  let currentCuisine = null;
+  let cart = [];
+  let orderHistory = [];
+  let lastOrder = null;
+  let currentUser = null;
+  let loyaltyPoints = 0;
+  let totalCaloriesConsumed = 0;
+  let dailyCalorieTarget = 2200;
+  let favorites = new Set();
+  let orderCountPerDish = {};
+  let currentPromo = null;
+  let currentDiscountAmount = 0;
+  let reviewsByDishId = {}; // { dishId: [{rating, comment}] }
+
+  // --------- SPLASH & LOGIN FLOW ---------
+
+  window.addEventListener('load', () => {
+    // show splash, then login
+    setTimeout(() => {
+      document.getElementById('splash-screen').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+    }, 1700);
+  });
+
+  function handleLogin() {
+    const nameInput = document.getElementById('login-name');
+    const emailInput = document.getElementById('login-email');
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    if (!name) {
+      alert("Please enter your name to continue.");
+      return;
+    }
+    currentUser = { name, email };
+
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-content').style.display = 'block';
+
+    const greetingEl = document.getElementById('user-greeting');
+    greetingEl.textContent = `· User: ${name}`;
+
+    loadProfileFromUser();
+    loadAddressFromStorage();
+    showPage('home');
+  }
+
+  // --------- PAGE NAVIGATION ---------
+
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const page = document.getElementById(pageId);
+    if (page) page.classList.add('active');
+
+    if (pageId === 'menu')      renderMenu();
+    else if (pageId === 'orders')   renderOrders();
+    else if (pageId === 'order-success' && lastOrder) renderOrderSuccess();
+    else if (pageId === 'calories') renderCalories();
+    else if (pageId === 'favorites') renderFavorites();
+    else if (pageId === 'profile')   renderProfileStats();
+  }
+
+  function jumpToCuisine(cuisineId) {
+    currentCuisine = cuisineId;
+    showPage('menu');
+  }
+
+  // --------- MENU / SEARCH / FAVORITES ---------
+
+  let activeSearchTerm = "";
+
+  function handleSearchInput() {
+    activeSearchTerm = document.getElementById('search-input').value.trim().toLowerCase();
+    renderMenu();
+  }
+
+  function clearSearch() {
+    activeSearchTerm = "";
+    document.getElementById('search-input').value = "";
+    renderMenu();
+  }
+
+  function renderMenu() {
+    const container = document.getElementById('menu-container');
+    if (!activeSearchTerm && currentCuisine === null) {
+      renderCuisineList();
+      return;
+    }
+
+    // search view (across all or within selected cuisine)
+    const results = menuItems.filter(item => {
+      if (currentCuisine && item.category !== currentCuisine) return false;
+      if (!activeSearchTerm) return true;
+
+      let match = item.name.toLowerCase().includes(activeSearchTerm)
+                || item.category.toLowerCase().includes(activeSearchTerm);
+
+      if (activeSearchTerm.includes("veg")) {
+        if (/chicken|mutton|fish|beef|egg|shawarma|pepperoni/i.test(item.name)) {
+          // non-veg
+        } else {
+          match = match || true;
+        }
+      }
+
+      const priceMatch = activeSearchTerm.match(/under\s+(\d+)/);
+      if (priceMatch) {
+        const limit = Number(priceMatch[1]);
+        if (item.price <= limit) match = true;
+        else match = false;
+      }
+
+      return match;
+    });
+
+    let title = "All Dishes";
+    if (currentCuisine) title = currentCuisine + " Dishes";
+
+    container.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+        <div>
+          <h3 style="margin:0;">${title}</h3>
+          <p style="font-size:0.85rem; margin:2px 0;">
+            ${activeSearchTerm ? ("Search results for: " + activeSearchTerm) : "Browse available dishes."}
+          </p>
+        </div>
+        <div>
+          ${currentCuisine ? `<button class="ghost-btn" onclick="backToCuisines()">Back to Cuisines</button>` : ``}
+        </div>
+      </div>
+      <div class="menu-grid" id="dish-grid"></div>
+    `;
+
+    const grid = document.getElementById('dish-grid');
+    grid.innerHTML = '';
+
+    if (!results.length) {
+      grid.innerHTML = `<p style="font-size:0.9rem;">No dishes match your search.</p>`;
+      return;
+    }
+
+    results.forEach(item => {
+      const isFav = favorites.has(item.id);
+      const dishReviews = reviewsByDishId[item.id] || [];
+      let avgRating = 0;
+      if (dishReviews.length) {
+        avgRating = dishReviews.reduce((s, r) => s + r.rating, 0) / dishReviews.length;
+      }
+
+      grid.innerHTML += `
+        <div class="menu-item">
+          <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite(${item.id}); event.stopPropagation();">
+            ${isFav ? '★' : '☆'}
+          </button>
+          <span class="category-tag">${item.category}</span>
+          ${item.image ? `<img src="${item.image}" alt="${item.name}">` : ``}
+          <h3>${item.name}</h3>
+          <p>₹${item.price}</p>
+          <p style="font-size:0.8rem; opacity:0.9;">Approx: ${item.calories} kcal</p>
+          ${dishReviews.length ? `<p style="font-size:0.8rem;">Rating: ${avgRating.toFixed(1)}/5 (${dishReviews.length})</p>` : `<p style="font-size:0.8rem; opacity:0.7;">No ratings yet</p>`}
+          <button onclick="addToCart(${item.id})">Add to Cart</button>
+        </div>
+      `;
+    });
+  }
+
+  function renderCuisineList() {
+    const container = document.getElementById('menu-container');
+    container.innerHTML = `
+      <p style="text-align:center; margin-bottom:10px;">
+        Choose a cuisine to open its dishes.
+      </p>
+      <div class="cuisine-grid" id="cuisine-grid"></div>
+    `;
+
+    const grid = document.getElementById('cuisine-grid');
+    grid.innerHTML = '';
+
+    cuisines.forEach(c => {
+      grid.innerHTML += `
+        <div class="cuisine-card" onclick="openCuisine('${c.id}')">
+          <span class="category-tag">${c.id}</span>
+          ${c.image ? `<img src="${c.image}" alt="${c.title}">` : ``}
+          <h3>${c.title}</h3>
+          <p style="font-size:0.85rem; color:#e0e0e0; margin-top:6px;">
+            ${c.description}
+          </p>
+        </div>
+      `;
+    });
+  }
+
+  function openCuisine(id) {
+    currentCuisine = id;
+    renderMenu();
+  }
+
+  function backToCuisines() {
+    currentCuisine = null;
+    renderMenu();
+  }
+
+  function toggleFavorite(itemId) {
+    if (favorites.has(itemId)) favorites.delete(itemId);
+    else favorites.add(itemId);
+    renderMenu();
+    renderFavorites();
+  }
+
+  function renderFavorites() {
+    const grid = document.getElementById('favorites-grid');
+    const msg = document.getElementById('no-favorites-msg');
+    grid.innerHTML = '';
+
+    const favItems = menuItems.filter(m => favorites.has(m.id));
+    if (!favItems.length) {
+      msg.style.display = 'block';
+      return;
+    }
+    msg.style.display = 'none';
+
+    favItems.forEach(item => {
+      const dishReviews = reviewsByDishId[item.id] || [];
+      let avgRating = 0;
+      if (dishReviews.length) {
+        avgRating = dishReviews.reduce((s, r) => s + r.rating, 0) / dishReviews.length;
+      }
+
+      grid.innerHTML += `
+        <div class="menu-item">
+          <button class="fav-btn active" onclick="toggleFavorite(${item.id}); event.stopPropagation();">
+            ★
+          </button>
+          <span class="category-tag">${item.category}</span>
+          ${item.image ? `<img src="${item.image}" alt="${item.name}">` : ``}
+          <h3>${item.name}</h3>
+          <p>₹${item.price}</p>
+          <p style="font-size:0.8rem; opacity:0.9;">Approx: ${item.calories} kcal</p>
+          ${dishReviews.length ? `<p style="font-size:0.8rem;">Rating: ${avgRating.toFixed(1)}/5 (${dishReviews.length})</p>` : `<p style="font-size:0.8rem; opacity:0.7;">No ratings yet</p>`}
+          <button onclick="addToCart(${item.id})">Add to Cart</button>
+        </div>
+      `;
+    });
+  }
+
+  // --------- CART & PROMO ---------
+
+  function addToCart(itemId) {
+    const item = menuItems.find(m => m.id === itemId);
+    if (!item) return;
+    const existing = cart.find(c => c.id === itemId);
+    if (existing) existing.qty++;
+    else {
+      cart.push({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        qty: 1,
+        calories: item.calories || 0
+      });
+    }
+    updateCart();
+    alert(item.name + " added to cart.");
+  }
+
+  function changeQty(itemId, delta) {
+    const item = cart.find(c => c.id === itemId);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) cart = cart.filter(c => c.id !== itemId);
+    updateCart();
+  }
+
+  function removeFromCart(itemId) {
+    cart = cart.filter(c => c.id !== itemId);
+    updateCart();
+  }
+
+  function getCartCalories() {
+    return cart.reduce((sum, c) => sum + (c.calories || 0) * c.qty, 0);
+  }
+
+  function applyPromo() {
+    const code = document.getElementById('promo-code').value.trim().toUpperCase();
+
+    if (!code) {
+        alert("Enter a promo code.");
+        return;
+    }
+
+    const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+    let discount = 0;
+
+    if (code === "RISHI") {
+        discount = total * 0.50;   // 50% OFF
+    } else if (code === "SHIRLYN") {
+        discount = total * 0.10;   // 10% OFF
+    } else {
+        alert("Invalid promo code.");
+        currentPromo = null;
+        currentDiscountAmount = 0;
+        updateCart();
+        return;
+    }
+
+    currentPromo = code;
+    currentDiscountAmount = Math.round(discount);
+    updateCart();
+    alert("Promo applied: " + code);
+}
+
+
+  function updateCart() {
+    document.getElementById('cart-count').innerText =
+      cart.reduce((sum, c) => sum + c.qty, 0);
+
+    const table = document.getElementById('cart-table');
+    table.innerHTML = `
+      <tr>
+        <th>Item</th>
+        <th>Price (₹)</th>
+        <th>Quantity</th>
+        <th>Total (₹)</th>
+        <th>Actions</th>
+      </tr>
+    `;
+
+    let total = 0;
+    cart.forEach(c => {
+      const lineTotal = c.price * c.qty;
+      total += lineTotal;
+      table.innerHTML += `
+        <tr>
+          <td>${c.name}</td>
+          <td>${c.price}</td>
+          <td>${c.qty}</td>
+          <td>${lineTotal}</td>
+          <td>
+            <button onclick="changeQty(${c.id}, -1)">-</button>
+            <button onclick="changeQty(${c.id}, 1)">+</button>
+            <button onclick="removeFromCart(${c.id})">Remove</button>
+          </td>
+        </tr>
+      `;
+    });
+
+    let discountText = "";
+    let finalTotal = total;
+    if (currentPromo && currentDiscountAmount > 0) {
+      finalTotal = Math.max(0, total - currentDiscountAmount);
+      discountText = `Promo (${currentPromo}) applied: -₹${currentDiscountAmount}. Payable: ₹${finalTotal}`;
+    }
+
+    document.getElementById('cart-total').innerText = "Subtotal: ₹" + total;
+    document.getElementById('cart-discount').innerText = discountText;
+
+    const cartCalories = getCartCalories();
+    document.getElementById('cart-calories').innerText =
+      "Cart Calories (approx): " + cartCalories + " kcal";
+
+    renderCalories();
+  }
+
+  function checkout() {
+    if (cart.length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
+
+    const subtotal = cart.reduce((sum, c) => sum + c.price * c.qty, 0);
+    const totalCaloriesOrder = getCartCalories();
+
+    let payable = subtotal;
+    if (currentPromo && currentDiscountAmount > 0) {
+      payable = Math.max(0, subtotal - currentDiscountAmount);
+    }
+
+    const earnedPoints = Math.round(payable / 10);
+
+    const orderId = "FG" + Date.now().toString().slice(-6);
+    const time = new Date().toLocaleString();
+
+    const order = {
+      id: orderId,
+      items: cart.map(c => ({ ...c })),
+      subtotal,
+      payable,
+      time,
+      calories: totalCaloriesOrder,
+      points: earnedPoints,
+      promo: currentPromo || null
+    };
+
+    orderHistory.unshift(order);
+    lastOrder = order;
+
+    loyaltyPoints += earnedPoints;
+    totalCaloriesConsumed += totalCaloriesOrder;
+    updateLoyaltyUI();
+
+    // update most ordered count
+    order.items.forEach(i => {
+      orderCountPerDish[i.id] = (orderCountPerDish[i.id] || 0) + i.qty;
+    });
+
+    // clear cart + promo
+    cart = [];
+    currentPromo = null;
+    currentDiscountAmount = 0;
+    document.getElementById('promo-code').value = '';
+    updateCart();
+
+    showPage('order-success');
+  }
+
+  // --------- ORDER SUCCESS / ETA / INVOICE ---------
+
+  function renderOrderSuccess() {
+    if (!lastOrder) return;
+    const metaEl = document.getElementById('order-success-meta');
+    const itemsEl = document.getElementById('order-success-items');
+    const totalEl = document.getElementById('order-success-total');
+    const pointsEl = document.getElementById('order-success-points');
+    const caloriesEl = document.getElementById('order-success-calories');
+    const etaEl = document.getElementById('order-success-eta');
+
+    metaEl.textContent = `Order ID: ${lastOrder.id} · Placed at ${lastOrder.time}`;
+    itemsEl.innerHTML = '';
+    lastOrder.items.forEach(item => {
+      itemsEl.innerHTML += `
+        <li>
+          <span>${item.name} x ${item.qty}</span>
+          <span>₹${item.price * item.qty}</span>
+        </li>
+      `;
+    });
+
+    totalEl.textContent = "Amount Paid: ₹" + lastOrder.payable +
+      (lastOrder.promo ? ` (Promo: ${lastOrder.promo})` : "");
+    pointsEl.textContent = "Points earned: " + (lastOrder.points || 0) +
+      " · Total points: " + loyaltyPoints;
+    caloriesEl.textContent = "Calories for this order (approx): " +
+      (lastOrder.calories || 0) + " kcal";
+
+    // ETA animation
+    const stages = [
+      "Preparing your food...",
+      "Packing your order...",
+      "Partner has picked up your order.",
+      "Your order is on the way...",
+      "Almost there!"
+    ];
+    let idx = 0;
+    etaEl.textContent = stages[0];
+    const interval = setInterval(() => {
+      idx++;
+      if (idx >= stages.length) {
+        clearInterval(interval);
+        etaEl.textContent = "Estimated delivery in 25–35 minutes.";
+      } else {
+        etaEl.textContent = stages[idx];
+      }
+    }, 2500);
+
+    renderCalories();
+    renderMostOrdered();
+  }
+
+  function printInvoice() {
+    window.print();
+  }
+
+  // --------- ORDER HISTORY & REVIEWS ---------
+
+  function renderOrders() {
+    const noOrdersMsg = document.getElementById('no-orders-msg');
+    const list = document.getElementById('orders-list');
+
+    if (!orderHistory.length) {
+      noOrdersMsg.style.display = 'block';
+      list.innerHTML = '';
+      return;
+    }
+
+    noOrdersMsg.style.display = 'none';
+    list.innerHTML = '';
+
+    orderHistory.forEach((order, index) => {
+      let itemsText = order.items.map(i => `${i.name} x${i.qty}`).join(', ');
+      list.innerHTML += `
+        <div class="order-card">
+          <div class="order-card-header">
+            <span><strong>${order.id}</strong></span>
+            <span>${order.time}</span>
+          </div>
+          <div class="order-card-items">
+            <strong>Items:</strong>
+            <span>${itemsText}</span>
+          </div>
+          <div style="text-align:right; margin-top:4px;">
+            <strong>Subtotal: ₹${order.subtotal}</strong><br>
+            <span>Promo: ${order.promo || 'None'}</span><br>
+            <span>Paid: ₹${order.payable}</span><br>
+            <span>Points earned: ${order.points || 0}</span><br>
+            <span>Calories (approx): ${order.calories || 0} kcal</span>
+          </div>
+          <div style="margin-top:6px; text-align:right;">
+            <button class="ghost-btn" style="font-size:0.8rem; padding:4px 10px;" onclick="rateOrder(${index})">
+              Rate this order
+            </button>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  function rateOrder(orderIndex) {
+    const order = orderHistory[orderIndex];
+    if (!order) return;
+    const ratingStr = prompt("Rate this order (1-5):");
+    const rating = Number(ratingStr);
+    if (!rating || rating < 1 || rating > 5) {
+      alert("Invalid rating.");
+      return;
+    }
+    const comment = prompt("Leave a short comment (optional):") || "";
+
+    order.items.forEach(i => {
+      if (!reviewsByDishId[i.id]) reviewsByDishId[i.id] = [];
+      reviewsByDishId[i.id].push({
+        rating,
+        comment
+      });
+    });
+
+    alert("Thanks for your feedback.");
+    renderMenu();
+    renderFavorites();
+  }
+
+  // --------- CALORIE TRACKER ---------
+
+  function updateCalorieTarget() {
+    const input = document.getElementById('calorie-target');
+    const val = Number(input.value);
+    if (!val || val < 800) {
+      alert("Please enter a realistic target (minimum 800 kcal).");
+      return;
+    }
+    dailyCalorieTarget = val;
+    renderCalories();
+  }
+
+  function renderCalories() {
+    const summaryEl = document.getElementById('calorie-summary');
+    if (!summaryEl) return;
+
+    const cartCalories = getCartCalories();
+    const totalApprox = totalCaloriesConsumed + cartCalories;
+
+    let msg = `Calories from completed orders: ${totalCaloriesConsumed} kcal. `;
+    msg += `Current cart: ${cartCalories} kcal. `;
+    msg += `Combined approximate intake: ${totalApprox} / ${dailyCalorieTarget} kcal. `;
+
+    const diff = dailyCalorieTarget - totalApprox;
+    if (diff > 0) {
+      msg += `Approx. remaining to reach target: ${diff} kcal.`;
+    } else if (diff < 0) {
+      msg += `Approx. over target: ${Math.abs(diff)} kcal.`;
+    } else {
+      msg += `You are exactly at your target.`;
+    }
+
+    summaryEl.textContent = msg;
+  }
+
+  // --------- ADMIN ---------
+
+  function addMenuItemFromAdmin() {
+    const nameInput = document.getElementById('admin-name');
+    const priceInput = document.getElementById('admin-price');
+    const categoryInput = document.getElementById('admin-category');
+    const imageInput = document.getElementById('admin-image');
+    const calInput = document.getElementById('admin-calories');
+
+    const name = nameInput.value.trim();
+    const price = Number(priceInput.value);
+    const category = categoryInput.value;
+    const image = imageInput.value.trim();
+    const calories = Number(calInput.value) || 0;
+
+    if (!name || !price) {
+      alert("Please enter both name and price.");
+      return;
+    }
+
+    const newId = Date.now();
+    menuItems.push({
+      id: newId,
+      name,
+      category,
+      price,
+      calories,
+      image: image || ""
+    });
+
+    nameInput.value = '';
+    priceInput.value = '';
+    categoryInput.value = 'Indian';
+    imageInput.value = '';
+    calInput.value = '';
+
+    renderMenu();
+    alert("Dish added: " + name);
+  }
+
+  // --------- LOYALTY / MOST ORDERED ---------
+
+  function updateLoyaltyUI() {
+    const el = document.getElementById('loyalty-points');
+    if (el) el.textContent = loyaltyPoints;
+    const navPoints = document.getElementById('nav-points');
+    if (navPoints) navPoints.style.display = 'inline-block';
+  }
+
+  function renderMostOrdered() {
+    const grid = document.getElementById('most-ordered-grid');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+    const entries = Object.entries(orderCountPerDish);
+    if (!entries.length) {
+      grid.innerHTML = `<p style="font-size:0.85rem;">No data yet. Place some orders to see trends.</p>`;
+      return;
+    }
+
+    const top = entries.sort((a,b)=>b[1]-a[1]).slice(0,4);
+    top.forEach(([dishId,count])=>{
+      const dish = menuItems.find(m=>m.id == dishId);
+      if (!dish) return;
+      grid.innerHTML += `
+        <div class="menu-item">
+          <span class="category-tag">${dish.category}</span>
+          ${dish.image ? `<img src="${dish.image}" alt="${dish.name}">` : ``}
+          <h3>${dish.name}</h3>
+          <p>Ordered ${count} time(s)</p>
+          <p>₹${dish.price}</p>
+          <button onclick="addToCart(${dish.id})">Reorder</button>
+        </div>
+      `;
+    });
+  }
+
+  // --------- PROFILE & ADDRESS ---------
+
+  function loadProfileFromUser() {
+    if (!currentUser) return;
+    const nameEl = document.getElementById('profile-name');
+    const emailEl = document.getElementById('profile-email');
+    nameEl.value = currentUser.name;
+    emailEl.value = currentUser.email || '';
+  }
+
+  function saveProfile() {
+    const nameEl = document.getElementById('profile-name');
+    const emailEl = document.getElementById('profile-email');
+    currentUser.name = nameEl.value.trim();
+    currentUser.email = emailEl.value.trim();
+    document.getElementById('user-greeting').textContent = '· User: ' + currentUser.name;
+    alert("Profile updated.");
+  }
+
+  function saveAddress() {
+    const addr = {
+      door: document.getElementById('addr-door').value.trim(),
+      street: document.getElementById('addr-street').value.trim(),
+      city: document.getElementById('addr-city').value.trim(),
+      pin: document.getElementById('addr-pin').value.trim(),
+      notes: document.getElementById('addr-notes').value.trim()
+    };
+    localStorage.setItem('foodgalaxy_address', JSON.stringify(addr));
+    alert("Address saved.");
+  }
+
+  function loadAddressFromStorage() {
+    const stored = localStorage.getItem('foodgalaxy_address');
+    if (!stored) return;
+    try {
+      const addr = JSON.parse(stored);
+      document.getElementById('addr-door').value = addr.door || '';
+      document.getElementById('addr-street').value = addr.street || '';
+      document.getElementById('addr-city').value = addr.city || '';
+      document.getElementById('addr-pin').value = addr.pin || '';
+      document.getElementById('addr-notes').value = addr.notes || '';
+    } catch(e) {}
+  }
+
+  function renderProfileStats() {
+    if (!currentUser) return;
+    document.getElementById('profile-orders').value = orderHistory.length;
+    document.getElementById('profile-points').value = loyaltyPoints;
+    document.getElementById('profile-calories').value = totalCaloriesConsumed + " kcal";
+  }
+
+  // --------- THEME TOGGLE ---------
+
+  function toggleTheme() {
+    document.body.classList.toggle('light-theme');
+  }
+
+  // --------- OFFLINE HANDLING ---------
+
+  window.addEventListener('offline', () => {
+    document.getElementById('offline-banner').style.display = 'block';
+  });
+  window.addEventListener('online', () => {
+    document.getElementById('offline-banner').style.display = 'none';
+  });
+
+  // --------- LANGUAGE (BASIC TEXT STRINGS) ---------
+
+  const translations = {
+    en: {
+      headerTagline: "Order anything, anytime, from anywhere — your dream food app.",
+      homePill: "Structured Food Ordering Experience",
+      homeWelcome: "Welcome to FoodGalaxy",
+      homeDesc: "Browse cuisines like folders, open your selections, and build your cart from Indian, Italian, Chinese, Desserts, Beverages & more — all in one interface.",
+      start: "Start Ordering",
+      explore: "Explore Cuisines",
+      keyFeatures: "Key Features",
+      shortcuts: "Quick Access Shortcuts",
+      shortcutsNote: "Select a category to open that cuisine directly.",
+      feat1Title: "Folder-Style Browsing",
+      feat1Text: "Open cuisines like folders and see all dishes grouped.",
+      feat2Title: "Instant Cart View",
+      feat2Text: "Live cart preview with quantity controls and totals.",
+      feat3Title: "Admin Management",
+      feat3Text: "Add new dishes from the Admin panel without reload."
+    },
+    hi: {
+      headerTagline: "कहीं से भी, कभी भी – अपना पसंदीदा भोजन ऑर्डर करें।",
+      homePill: "संरचित फूड ऑर्डरिंग अनुभव",
+      homeWelcome: "फूडगैलेक्सी में आपका स्वागत है",
+      homeDesc: "क्यूज़ीन को फोल्डर की तरह खोलें, अपनी पसंद चुनें और भारतीय, इटैलियन, चाइनीज़, डेज़र्ट व ड्रिंक्स एक ही ऐप से ऑर्डर करें।",
+      start: "ऑर्डर शुरू करें",
+      explore: "क्यूज़ीन देखें",
+      keyFeatures: "मुख्य विशेषताएँ",
+      shortcuts: "जल्दी पहुँच शॉर्टकट",
+      shortcutsNote: "सीधे खोलने के लिए कोई भी क्यूज़ीन चुनें।",
+      feat1Title: "फोल्डर-स्टाइल ब्राउज़िंग",
+      feat1Text: "क्यूज़ीन को फोल्डर की तरह खोलें और डिशेज़ को साथ देखें।",
+      feat2Title: "तुरंत कार्ट दृश्य",
+      feat2Text: "क्वांटिटी और टोटल के साथ तुरंत कार्ट देखें।",
+      feat3Title: "एडमिन मैनेजमेंट",
+      feat3Text: "एडमिन पैनल से बिना रीलोड किए नई डिश जोड़ें।"
+    },
+    ta: {
+      headerTagline: "எங்கு இருந்தாலும், எப்போது வேண்டுமானாலும் – உங்கள் விருப்பமான உணவை ஆர்டர் செய்யுங்கள்.",
+      homePill: "ஒழுங்குபடுத்தப்பட்ட உணவு ஆர்டர் அனுபவம்",
+      homeWelcome: "FoodGalaxy-க்கு வரவேற்கிறோம்",
+      homeDesc: "குயிசீன்களை கோப்புறையாக திறந்து, உங்களுக்குப் பிடித்த உணவுகளைத் தேர்ந்தெடுத்து, இந்திய, இத்தாலிய, சீன, இனிப்பு மற்றும் பானங்களை ஒரே இடத்தில் ஆர்டர் செய்யுங்கள்.",
+      start: "ஆர்டர் செய்ய தொடங்கு",
+      explore: "குயிசீன்கள் பார்க்க",
+      keyFeatures: "முக்கிய அம்சங்கள்",
+      shortcuts: "விரைவான குறுக்குவழிகள்",
+      shortcutsNote: "நேரடியாக திறக்க ஒரு குயிசீனைத் தேர்வுசெய்யுங்கள்.",
+      feat1Title: "கோப்புறை-பாணி உலாவல்",
+      feat1Text: "குயிசீன்களை கோப்புறையாக திறந்து அனைத்து உணவுகளையும் பார்க்கலாம்.",
+      feat2Title: "உடனடி கார்ட் காட்சி",
+      feat2Text: "அளவு மற்றும் மொத்தத்துடன் உடனடியாக கார்டைப் பார்க்கலாம்.",
+      feat3Title: "நிர்வாக மேலாண்மை",
+      feat3Text: "பக்கம் மீண்டும் ஏற்றாமல் நிர்வாகப்பக்கத்தில் புதிய உணவுகளைச் சேர்க்கலாம்."
+    }
+  };
+
+  function changeLanguage(lang) {
+    const t = translations[lang] || translations.en;
+    document.getElementById('header-tagline').childNodes[0].textContent = t.headerTagline + " ";
+    document.getElementById('home-pill-text').textContent = t.homePill;
+    document.getElementById('home-welcome').childNodes[0].textContent = t.homeWelcome + " ";
+    document.getElementById('home-desc').textContent = t.homeDesc;
+    document.getElementById('home-start-btn').textContent = t.start;
+    document.getElementById('home-explore-btn').textContent = t.explore;
+    document.getElementById('home-why-title').textContent = t.keyFeatures;
+    document.getElementById('home-shortcuts-title').textContent = t.shortcuts;
+    document.getElementById('home-shortcuts-note').textContent = t.shortcutsNote;
+    document.getElementById('feat1-title').textContent = t.feat1Title;
+    document.getElementById('feat1-text').textContent = t.feat1Text;
+    document.getElementById('feat2-title').textContent = t.feat2Title;
+    document.getElementById('feat2-text').textContent = t.feat2Text;
+    document.getElementById('feat3-title').textContent = t.feat3Title;
+    document.getElementById('feat3-text').textContent = t.feat3Text;
+  }
+
+  // --------- INITIAL RENDER ---------
+
+  renderMenu();
+  updateCart();
+  updateLoyaltyUI();
+  renderCalories();
+  renderMostOrdered();
+</script>
+
+</body>
+</html>
