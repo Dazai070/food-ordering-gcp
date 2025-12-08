@@ -811,7 +811,6 @@
   <a onclick="showPage('orders')" id="nav-orders">My Orders</a>
   <a onclick="showPage('calories')" id="nav-calories">Calorie Tracker</a>
   <a onclick="showPage('profile')" id="nav-profile">Profile</a>
-  <a onclick="showPage('admin')" id="nav-admin">Admin</a>
   <span class="nav-meta" id="nav-points">Points: <span id="loyalty-points">0</span></span>
   <button class="ghost-btn" style="padding:4px 10px; font-size:0.8rem;" onclick="toggleTheme()">Theme</button>
   <select id="language-select" onchange="changeLanguage(this.value)">
@@ -820,7 +819,6 @@
     <option value="ta">TA</option>
   </select>
 </nav>
-
 <div id="home" class="page active">
   <div class="glass-card home-hero">
     <div class="home-hero-left">
@@ -1072,41 +1070,6 @@
   </div>
 </div>
 
-<div id="admin" class="page">
-  <div class="glass-card">
-    <h2>Admin Panel</h2>
-    <p>Add new dishes dynamically.</p>
-    <div>
-      <label>Name</label>
-      <input id="admin-name" type="text">
-
-      <label>Price</label>
-      <input id="admin-price" type="number">
-
-      <label>Cuisine</label>
-      <select id="admin-category">
-          <option>Indian</option>
-          <option>Fast Food</option>
-          <option>Italian</option>
-          <option>Chinese</option>
-          <option>Japanese</option>
-          <option>French</option>
-          <option>Arabic</option>
-          <option>Desserts</option>
-          <option>Beverages</option>
-      </select>
-
-      <label>Approx Calories (optional)</label>
-      <input id="admin-calories" type="number" placeholder="e.g. 300" />
-
-      <label>Image URL (optional)</label>
-      <input id="admin-image" type="text" placeholder="https://example.com/image.jpg">
-
-      <button onclick="addMenuItemFromAdmin()" style="margin-top:10px;">Add</button>
-    </div>
-  </div>
-</div>
-
 <footer>
   FoodGalaxy · Food Ordering Web Application<br>
   <span style="font-size:0.8rem; opacity:0.8;">
@@ -1120,7 +1083,6 @@
 <div class="watermark">
   Made by <strong>Ms. Shirlyn Danita</strong>
 </div>
-
 <script>
   // --------- DATA STRUCTURES ---------
 
@@ -1709,7 +1671,7 @@
     currentDiscountAmount = Math.round(discount);
     updateCart();
     alert("Promo applied: " + code);
-}
+  }
 
 
   function updateCart() {

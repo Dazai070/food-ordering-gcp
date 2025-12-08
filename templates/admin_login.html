@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FoodGalaxy – Admin Login</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Poppins', sans-serif;
+    background: radial-gradient(circle at top, #ffcf71 0, #f48fb1 28%, #3f51b5 70%, #121212 100%);
+    color: #f5f5f5;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .admin-login-card {
+    background: rgba(0,0,0,0.82);
+    padding: 24px 24px 26px;
+    border-radius: 20px;
+    max-width: 380px;
+    width: 90%;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.9);
+    border: 1px solid rgba(255,255,255,0.16);
+    text-align: center;
+  }
+
+  .admin-login-card h1 {
+    margin: 0 0 4px;
+    font-size: 1.6rem;
+    color: #ffea00;
+  }
+
+  .admin-login-card p {
+    font-size: 0.9rem;
+    color: #d3d3d3;
+    margin: 0 0 16px;
+  }
+
+  .admin-login-card label {
+    display: block;
+    text-align: left;
+    font-size: 0.8rem;
+    margin: 8px 0 4px;
+    color: #f5f5f5;
+  }
+
+  .admin-login-card input {
+    width: 100%;
+    padding: 7px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.6);
+    color: #f5f5f5;
+    font-size: 0.85rem;
+  }
+
+  .admin-login-card input:focus {
+    outline: none;
+    border-color: #ffeb3b;
+    box-shadow: 0 0 8px rgba(255,235,59,0.5);
+  }
+
+  button {
+    background: linear-gradient(90deg, #ff9800, #ff5722);
+    color: #1b1b1b;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.25s;
+    font-size: 0.9rem;
+    width: 100%;
+    margin-top: 14px;
+  }
+
+  button:hover {
+    background: linear-gradient(90deg, #ffeb3b, #ff9800);
+    color: #000;
+    box-shadow: 0 0 10px rgba(255,235,59,0.7);
+  }
+
+  .error {
+    color: #ff6b6b;
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+  }
+
+  .footer-link {
+    margin-top: 12px;
+    font-size: 0.8rem;
+    color: #cfcfcf;
+  }
+
+  .footer-link a {
+    color: #ffeb3b;
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="admin-login-card">
+  <h1>🍽️ FoodGalaxy</h1>
+  <p>Admin login to manage menu & orders.</p>
+
+  <!-- For Flask later you can show an error here -->
+  <!-- <p class="error">{{ error }}</p> -->
+
+  <form method="POST" action="/admin">
+    <label>Username</label>
+    <input type="text" name="username" required>
+
+    <label>Password</label>
+    <input type="password" name="password" required>
+
+    <button type="submit">Login</button>
+  </form>
+
+  <div class="footer-link">
+    ← <a href="/">Back to FoodGalaxy</a>
+  </div>
+</div>
+
+</body>
+</html>

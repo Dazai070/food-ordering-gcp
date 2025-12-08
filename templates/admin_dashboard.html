@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FoodGalaxy – Admin Dashboard</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Poppins', sans-serif;
+    background: radial-gradient(circle at top, #ffcf71 0, #f48fb1 28%, #3f51b5 70%, #121212 100%);
+    color: #f5f5f5;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .admin-shell {
+    max-width: 1100px;
+    width: 100%;
+  }
+  .admin-card {
+    background: rgba(18,18,18,0.78);
+    border-radius: 18px;
+    padding: 22px 22px 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+  }
+  .top-bar a {
+    color: #ffeb3b;
+    text-decoration: none;
+  }
+  .top-bar a:hover {
+    text-decoration: underline;
+  }
+  button {
+    background: linear-gradient(90deg, #ff9800, #ff5722);
+    color: #1b1b1b;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.25s;
+    font-size: 0.9rem;
+  }
+  button:hover {
+    background: linear-gradient(90deg, #ffeb3b, #ff9800);
+    color: #000;
+    box-shadow: 0 0 10px rgba(255,235,59,0.7);
+  }
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.35);
+    color: #f5f5f5;
+  }
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.08);
+    color: #ffeb3b;
+  }
+
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .admin-header h1 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: #ffea00;
+  }
+  .admin-header span {
+    font-size: 0.85rem;
+    opacity: 0.9;
+  }
+
+  .admin-grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    margin-top: 12px;
+  }
+  @media (max-width: 900px) {
+    .admin-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .panel {
+    background: rgba(0,0,0,0.65);
+    border-radius: 14px;
+    padding: 14px 14px 12px;
+    border: 1px solid rgba(255,255,255,0.12);
+    font-size: 0.9rem;
+  }
+  .panel h2 {
+    margin: 0 0 8px;
+    font-size: 1rem;
+    color: #ffeb3b;
+  }
+  .panel p {
+    margin: 0 0 10px;
+    font-size: 0.84rem;
+    color: #e0e0e0;
+  }
+
+  label {
+    display: block;
+    margin: 6px 0 2px;
+    font-size: 0.8rem;
+  }
+  input, select {
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.6);
+    color: #f5f5f5;
+    font-size: 0.85rem;
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: #ffeb3b;
+    box-shadow: 0 0 6px rgba(255,235,59,0.4);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+    font-size: 0.8rem;
+  }
+  th, td {
+    padding: 6px 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    text-align: left;
+  }
+  th {
+    color: #ffeb3b;
+    background: rgba(0,0,0,0.7);
+  }
+  img.thumb {
+    width: 48px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  .small-text {
+    font-size: 0.78rem;
+    opacity: 0.85;
+  }
+  .action-buttons {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .action-buttons button {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="admin-shell">
+  <div class="admin-card">
+    <div class="top-bar">
+      <a href="/">← Back to FoodGalaxy</a>
+      <form method="GET" action="/admin/logout" style="margin:0;">
+        <button type="submit" class="btn-ghost">Logout</button>
+      </form>
+    </div>
+
+    <div class="admin-header">
+      <div>
+        <h1>Admin Dashboard</h1>
+        <span>Manage dishes, prices and categories for FoodGalaxy.</span>
+      </div>
+      <div class="small-text">
+        Signed in as: Admin
+      </div>
+    </div>
+
+    <div class="admin-grid">
+      <!-- LEFT: Add / edit -->
+      <div class="panel">
+        <h2>Add New Dish</h2>
+        <p>Add a new dish to the FoodGalaxy menu.</p>
+
+        <form method="POST" action="{{ url_for('admin_add_dish') }}">
+          <label>Dish Name</label>
+          <input type="text" name="name" required>
+
+          <label>Price (₹)</label>
+          <input type="number" name="price" required min="1">
+
+          <label>Cuisine</label>
+          <select name="category">
+            <option>Indian</option>
+            <option>Fast Food</option>
+            <option>Italian</option>
+            <option>Chinese</option>
+            <option>Japanese</option>
+            <option>French</option>
+            <option>Arabic</option>
+            <option>Desserts</option>
+            <option>Beverages</option>
+          </select>
+
+          <label>Approx Calories (optional)</label>
+          <input type="number" name="calories" placeholder="e.g. 320">
+
+          <label>Image URL (optional)</label>
+          <input type="text" name="image" placeholder="https://example.com/image.jpg">
+
+          <button type="submit" style="margin-top:10px;">Add Dish</button>
+        </form>
+
+        <p class="small-text" style="margin-top:8px;">
+          Newly added dishes will appear immediately in the customer app menu.
+        </p>
+      </div>
+
+      <!-- RIGHT: Current menu list with edit/delete -->
+      <div class="panel">
+        <h2>Current Menu</h2>
+        <p class="small-text">
+          Quick overview of all dishes. Use inline edit to update name, price, etc.
+        </p>
+
+        {% if menu %}
+          <table>
+            <tr>
+              <th>ID</th>
+              <th>Dish</th>
+              <th>₹</th>
+              <th>Cat.</th>
+              <th>kcal</th>
+              <th>Img</th>
+              <th>Actions</th>
+            </tr>
+            {% for item in menu %}
+            <tr>
+              <td>{{ item.id }}</td>
+              <td>
+                <form method="POST" action="{{ url_for('admin_edit_dish', dish_id=item.id) }}">
+                  <input type="text" name="name" value="{{ item.name }}" style="max-width:140px;">
+              </td>
+              <td>
+                  <input type="number" name="price" value="{{ item.price }}" style="width:70px;">
+              </td>
+              <td>
+                  <input type="text" name="category" value="{{ item.category }}" style="width:90px;">
+              </td>
+              <td>
+                  <input type="number" name="calories" value="{{ item.calories or 0 }}" style="width:70px;">
+              </td>
+              <td>
+                  {% if item.image %}
+                    <img src="{{ item.image }}" class="thumb" alt="{{ item.name }}">
+                  {% else %}
+                    <span class="small-text">None</span>
+                  {% endif %}
+                  <input type="text" name="image" value="{{ item.image or '' }}" placeholder="Image URL" style="margin-top:3px;">
+              </td>
+              <td>
+                  <div class="action-buttons">
+                    <button type="submit">Save</button>
+                </form>
+                    <form method="POST" action="{{ url_for('admin_delete_dish', dish_id=item.id) }}" onsubmit="return confirm('Delete this dish?');">
+                      <button type="submit" class="btn-ghost">Delete</button>
+                    </form>
+                  </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+        {% else %}
+          <p class="small-text">No dishes yet. Add your first dish on the left.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
