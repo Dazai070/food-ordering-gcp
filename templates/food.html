@@ -1086,282 +1086,53 @@
 <script>
   // --------- DATA STRUCTURES ---------
 
-  let menuItems = [
-    // Same data as before with calories + images
-    // (truncated explanation: full list maintained)
-    // 🇮🇳 INDIAN
-    { id: 1,  name: "Chicken Biryani", category: "Indian", price: 180, calories: 650,
-      image: "https://static.vecteezy.com/system/resources/thumbnails/024/650/050/small/gourmet-chicken-biryani-with-steamed-basmati-rice-generated-by-ai-free-photo.jpg"
-    },
-    { id: 2,  name: "Mutton Biryani", category: "Indian", price: 220, calories: 700,
-      image: "https://static.vecteezy.com/system/resources/thumbnails/024/650/050/small/gourmet-chicken-biryani-with-steamed-basmati-rice-generated-by-ai-free-photo.jpg"
-    },
-    { id: 3,  name: "Beef Biryani", category: "Indian", price: 200, calories: 720,
-      image: "https://static.vecteezy.com/system/resources/thumbnails/024/650/050/small/gourmet-chicken-biryani-with-steamed-basmati-rice-generated-by-ai-free-photo.jpg"
-    },
-    { id: 4,  name: "Egg Biryani", category: "Indian", price: 140, calories: 550,
-      image: "https://static.vecteezy.com/system/resources/thumbnails/024/650/050/small/gourmet-chicken-biryani-with-steamed-basmati-rice-generated-by-ai-free-photo.jpg"
-    },
-    { id: 5,  name: "Veg Biryani", category: "Indian", price: 130, calories: 500,
-      image: "https://static.vecteezy.com/system/resources/thumbnails/024/650/050/small/gourmet-chicken-biryani-with-steamed-basmati-rice-generated-by-ai-free-photo.jpg"
-    },
+  let menuItems = [];   // ✅ REQUIRED (same variable name as before)
 
-    { id: 6,  name: "Dosa with Sambar & Chutney", category: "Indian", price: 60, calories: 300,
-      image: "https://images.pexels.com/photos/5560763/pexels-photo-5560763.jpeg?cs=srgb&dl=pexels-saveurssecretes-5560763.jpg&fm=jpg"
-    },
-    { id: 7,  name: "Idly with Sambar & Chutney", category: "Indian", price: 50, calories: 250,
-      image: "https://cdn.pixabay.com/photo/2017/06/16/11/38/breakfast-2408818_1280.jpg"
-    },
-    { id: 8,  name: "Paneer Butter Masala", category: "Indian", price: 160, calories: 450,
-      image: "https://myfoodstory.com/wp-content/uploads/2021/10/Paneer-Butter-Masala-1-2.jpg"
-    },
+  async function loadMenuFromServer() {
+  try {
+    const res = await fetch("/api/menu?ts=" + Date.now());
+    if (!res.ok) throw new Error("Failed to load menu");
+    menuItems = await res.json();
+    renderMenu();
+    renderMostOrdered();
+  } catch (err) {
+    console.error(err);
+    alert("Unable to load menu from server.");
+  }
+}
 
-    { id: 9,  name: "Naan (2 pcs)", category: "Indian", price: 40, calories: 220,
-      image: "https://media.istockphoto.com/id/1143530040/photo/indian-naan-bread-with-garlic-butter-on-wooden-table.jpg?s=612x612&w=0&k=20&c=71SgbJtnfiHUiud1oGxnhiZsx5nuivWwZt8DlIk8hi0="
-    },
-    { id: 10, name: "Butter Naan (2 pcs)", category: "Indian", price: 50, calories: 260,
-      image: "https://media.istockphoto.com/id/1143530040/photo/indian-naan-bread-with-garlic-butter-on-wooden-table.jpg?s=612x612&w=0&k=20&c=71SgbJtnfiHUiud1oGxnhiZsx5nuivWwZt8DlIk8hi0="
-    },
-    { id: 11, name: "Chapathi (3 pcs)", category: "Indian", price: 45, calories: 210,
-      image: "https://media.istockphoto.com/id/516359240/photo/bhendi-masala-or-bhindi-masala-ladies-finger-curry-with-chapati.jpg?s=612x612&w=0&k=20&c=0mGnvNM2lxl-dTTJlhAfVJE5WidxYmmvrvNs1NZUKvs="
-    },
+const cuisines = [
+  { id: "Indian", title: "Indian", description: "Biryanis, dosas, curries and comfort food.",
+    image: "https://static.vecteezy.com/system/resources/thumbnails/034/059/263/small/fresh-and-organic-green-vegetables-for-healthy-eating-and-wellbeing-background-image-photo.jpg"
+  },
+  { id: "Fast Food", title: "Fast Food", description: "Burgers, fries, fried chicken and more.",
+    image: "https://img.freepik.com/free-photo/top-view-fast-food-meal_23-2148273108.jpg"
+  },
+  { id: "Italian", title: "Italian", description: "Pizzas, pastas, lasagna and garlic bread.",
+    image: "https://img.freepik.com/free-photo/top-view-table-full-delicious-food-assortment_23-2149141339.jpg"
+  },
+  { id: "Chinese", title: "Chinese", description: "Noodles, fried rice, manchurian and more.",
+    image: "https://images.unsplash.com/photo-1585032226651-759b368d7246?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2hpbmVzZSUyMGZvb2R8ZW58MHx8MHx8fDA%3Dj"
+  },
+  { id: "Japanese", title: "Japanese", description: "Ramen, sushi, tempura and rice bowls.",
+    image: "https://img.freepik.com/free-photo/flat-lay-sushi-meal-arrangement_23-2148930393.jpg?semt=ais_hybrid&w=740&q=80"
+  },
+  { id: "French", title: "French", description: "Bakes, soups and mains.",
+    image: "https://img.freepik.com/premium-photo/close-up-food-served-plate-table_1048944-1046596.jpg?semt=ais_hybrid&w=740&q=80"
+  },
+  { id: "Arabic", title: "Arabic", description: "Shawarma, falafel, hummus and kabsa.",
+    image: "https://img.freepik.com/free-photo/falafel-hummus-pita-middle-eastern-arabic-dishes-halal-food-top-view-copy-space_2829-14258.jpg"
+  },
+  { id: "Desserts", title: "Desserts", description: "Sweet dishes from multiple cuisines.",
+    image: "https://plus.unsplash.com/premium_photo-1667546202654-e7574a20872c?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZGVzc2VydHN8ZW58MHx8MHx8fDA%3D"
+  },
+  { id: "Beverages", title: "Beverages", description: "Hot and cold drinks to match every meal.",
+    image: "https://img.freepik.com/premium-photo/three-colorful-drinks-are-displayed-with-ice-mint-leaves-slices-lemon-accompanied-by-fresh_667565-6391.jpg?semt=ais_hybrid&w=740&q=80"
+  }
+];
 
-    { id: 12, name: "Curd Rice", category: "Indian", price: 70, calories: 350,
-      image: "https://media.istockphoto.com/id/1168155061/photo/curd-rice-or-thayir-sadam-is-a-delicious-south-indian-recipe-where-cooked-rice-is-mixed-with.jpg?s=612x612&w=0&k=20&c=9ayO_MCk4A6J-UIMfwFHOopJ-Lv-HdHNg99I8xReotQ="
-    },
-    { id: 13, name: "Fish Curry", category: "Indian", price: 170, calories: 400,
-      image: "https://thumbs.dreamstime.com/b/fish-curry-28687129.jpg"
-    },
 
-    { id: 14, name: "Chicken 65", category: "Indian", price: 150, calories: 480,
-      image: "https://thumbs.dreamstime.com/b/chicken-dish-garnished-lemon-served-plate-320522220.jpg"
-    },
-    { id: 15, name: "Masala Dosa", category: "Indian", price: 70, calories: 350,
-      image: "https://images.pexels.com/photos/5560763/pexels-photo-5560763.jpeg?cs=srgb&dl=pexels-saveurssecretes-5560763.jpg&fm=jpg"
-    },
-    { id: 16, name: "Sambar Rice", category: "Indian", price: 90, calories: 380,
-      image: "https://t4.ftcdn.net/jpg/04/97/27/31/360_F_497273192_FaNrcQGMMpQeBGitqp04l0XwwgXmvPmO.jpg"
-    },
-    { id: 17, name: "Gobi 65", category: "Indian", price: 120, calories: 420,
-      image: "https://t4.ftcdn.net/jpg/04/18/04/35/360_F_418043565_Lv14th6glsnvUXPiirPUChhJMrmUhJts.jpg"
-    },
 
-    // 🍔 FAST FOOD
-    { id: 18, name: "Chicken Burger", category: "Fast Food", price: 150, calories: 520,
-      image: "https://img.freepik.com/free-photo/delicious-burger-with-fresh-ingredients_23-2150857908.jpg"
-    },
-    { id: 19, name: "Veg Burger", category: "Fast Food", price: 120, calories: 450,
-      image: "https://img.freepik.com/free-photo/delicious-burger-with-fresh-ingredients_23-2150857908.jpg"
-    },
-    { id: 20, name: "Cheese Burger", category: "Fast Food", price: 140, calories: 550,
-      image: "https://img.freepik.com/free-photo/delicious-burger-with-fresh-ingredients_23-2150857908.jpg"
-    },
-
-    { id: 21, name: "Fried Chicken", category: "Fast Food", price: 170, calories: 600,
-      image: "https://media.istockphoto.com/id/452813985/photo/plate-of-fried-chicken-on-blue-plaid-towel.jpg?s=612x612&w=0&k=20&c=e_03DvZFXhvbMR5eBiflKJ2nnQnoaBnufrT37h6Wf7s="
-    },
-    { id: 22, name: "French Fries", category: "Fast Food", price: 80, calories: 350,
-      image: "https://static.vecteezy.com/system/resources/thumbnails/034/904/621/small/savory-french-fries-cuisine-freshly-prepared-to-perfection-generative-ai-photo.jpg"
-    },
-    { id: 23, name: "Wraps", category: "Fast Food", price: 130, calories: 480,
-      image: "https://img.freepik.com/free-photo/burritos-wraps-with-beef-vegetables-ai-generated-image_511042-1672.jpg?semt=ais_hybrid&w=740&q=80"
-    },
-    { id: 24, name: "Chicken Nuggets", category: "Fast Food", price: 140, calories: 430,
-      image: "https://www.licious.in/blog/wp-content/uploads/2020/12/Popcorn-Chicken.jpg"
-    },
-
-    { id: 25, name: "Peri Peri Fries", category: "Fast Food", price: 110, calories: 380,
-      image: "https://static.vecteezy.com/system/resources/thumbnails/034/904/621/small/savory-french-fries-cuisine-freshly-prepared-to-perfection-generative-ai-photo.jpg"
-    },
-    { id: 26, name: "Cheese Nachos", category: "Fast Food", price: 150, calories: 450,
-      image: "https://www.pamperedchef.com/iceberg/com/recipe/1552947-lg.jpg"
-    },
-    { id: 27, name: "Grilled Sandwich", category: "Fast Food", price: 120, calories: 420,
-      image: "https://static.toiimg.com/photo/54714340.cms"
-    },
-    { id: 28, name: "Popcorn Chicken", category: "Fast Food", price: 160, calories: 520,
-      image: "https://www.licious.in/blog/wp-content/uploads/2020/12/Popcorn-Chicken.jpg"
-    },
-
-    // 🇮🇹 ITALIAN
-    { id: 29, name: "Margherita Pizza", category: "Italian", price: 220, calories: 650,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIibPbOeDQQscm9g-fDNdCvROokQJukg8nYQ&s"
-    },
-    { id: 30, name: "Veg Supreme Pizza", category: "Italian", price: 260, calories: 700,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIibPbOeDQQscm9g-fDNdCvROokQJukg8nYQ&s"
-    },
-    { id: 31, name: "Chicken Pepperoni Pizza", category: "Italian", price: 300, calories: 750,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIibPbOeDQQscm9g-fDNdCvROokQJukg8nYQ&s"
-    },
-    { id: 32, name: "Four Cheese Pizza", category: "Italian", price: 280, calories: 720,
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIibPbOeDQQscm9g-fDNdCvROokQJukg8nYQ&s"
-    },
-
-    { id: 33, name: "Pasta Alfredo", category: "Italian", price: 200, calories: 600,
-      image: "https://img.freepik.com/free-photo/penne-pasta-tomato-sauce-with-chicken-tomatoes-wooden-table_2829-19744.jpg?semt=ais_hybrid&w=740&q=80"
-    },
-    { id: 34, name: "Lasagna", category: "Italian", price: 240, calories: 650,
-      image: "https://media.istockphoto.com/id/543663322/photo/meat-lasagna.jpg?s=612x612&w=0&k=20&c=nYLF1yuCTxIMwQ0JjnAT3_fd7ZqsAds1RO4FOinimZ4="
-    },
-
-    { id: 35, name: "Garlic Bread", category: "Italian", price: 90, calories: 280,
-      image: "https://media.istockphoto.com/id/547046390/photo/garlic-bread.jpg?s=612x612&w=0&k=20&c=oArNgkbjjPKlToDnBhL7xNwU4_eJLPTaLbAlIuunHDY="
-    },
-    { id: 36, name: "Risotto", category: "Italian", price: 180, calories: 550,
-      image: "https://media.istockphoto.com/id/1197141340/photo/italian-risotto-with-spring-asparagus-and-parmesan-cheese-in-plate-on-light-background.jpg?s=612x612&w=0&k=20&c=67OY3rK4mTiuD1xGeRKdXZOifwatF2uGZkqofoJt3VU="
-    },
-
-    // 🇨🇳 CHINESE
-    { id: 37, name: "Noodles", category: "Chinese", price: 120, calories: 450,
-      image: "https://images.pexels.com/photos/2347311/pexels-photo-2347311.jpeg?cs=srgb&dl=pexels-enginakyurt-2347311.jpg&fm=jpg"
-    },
-    { id: 38, name: "Manchurian", category: "Chinese", price: 140, calories: 400,
-      image: "https://t3.ftcdn.net/jpg/07/78/62/20/360_F_778622047_jPUi1wh6gTydtsjNVDOjDscqmVJfkBwE.jpg"
-    },
-    { id: 39, name: "Fried Rice", category: "Chinese", price: 130, calories: 500,
-      image: "https://t4.ftcdn.net/jpg/00/68/53/35/360_F_68533591_guYFbtlPxbgfPJkYDGkI7NHGKFMovkvS.jpg"
-    },
-
-    { id: 40, name: "Schezwan Fried Rice", category: "Chinese", price: 150, calories: 520,
-      image: "https://t4.ftcdn.net/jpg/00/68/53/35/360_F_68533591_guYFbtlPxbgfPJkYDGkI7NHGKFMovkvS.jpg"
-    },
-    { id: 41, name: "Spring Rolls", category: "Chinese", price: 110, calories: 320,
-      image: "https://media.istockphoto.com/id/1313085999/photo/fried-vegetable-spring-rolls-with-sweet-chili-and-soya-sauce-on-wooden-board.jpg?s=612x612&w=0&k=20&c=OM1OfrBS7D4666h9eZtztqFmQW0Ch15bcMcNbYhUBIo="
-    },
-    { id: 42, name: "Kung Pao Paneer", category: "Chinese", price: 180, calories: 480,
-      image: "https://media.istockphoto.com/id/1206748835/photo/delicious-kung-pao-chicken-with-pepper-shallots-and-peanuts-in-a-wok-pan.jpg?s=612x612&w=0&k=20&c=1bZhsu-d-nUYcHdMJYFNMzRbl5MaMLH44jelULOY_HM="
-    },
-
-    // 🇯🇵 JAPANESE
-    { id: 43, name: "Ramen", category: "Japanese", price: 250, calories: 600,
-      image: "https://media.istockphoto.com/id/511792878/photo/japanese-ramen-soup-with-chicken-egg-chives-and-sprout.jpg?s=612x612&w=0&k=20&c=NRnqc3wTUlIvur2po8FWARqxDWB7EG78Z1bZ7ZcOeNY="
-    },
-    { id: 44, name: "Sushi Rolls", category: "Japanese", price: 280, calories: 420,
-      image: "https://media.istockphoto.com/id/1354366250/photo/set-of-rainbow-uramaki-sushi-rolls-with-avocado.jpg?s=612x612&w=0&k=20&c=wgFUfdRVdtW976mlii4zK_Ziy7rqEcXWPHjGZ8dO5A0="
-    },
-    { id: 45, name: "Tempura", category: "Japanese", price: 200, calories: 450,
-      image: "https://t3.ftcdn.net/jpg/04/90/45/20/360_F_490452030_SX32SiO4ytYvzCq2HDvnRpmpGfdMnjfD.jpg"
-    },
-    { id: 46, name: "Teriyaki Rice Bowl", category: "Japanese", price: 220, calories: 580,
-      image: "https://media.istockphoto.com/id/538965661/photo/shrimp-and-fried-rice-teriyaki.jpg?s=612x612&w=0&k=20&c=Cx8XonchYhOaGfWCCbfygkLusCENQY0_hQyL4qOskLg="
-    },
-
-    // 🇫🇷 FRENCH
-    { id: 47, name: "Croissant Sandwich", category: "French", price: 160, calories: 430,
-      image: "https://media.istockphoto.com/id/95380176/photo/fresh-croissant.jpg?s=612x612&w=0&k=20&c=WC9_MHOVAcCPF39ER4plI5yFmVhnO-bKqTeiXk3TKmM="
-    },
-    { id: 48, name: "Ratatouille", category: "French", price: 180, calories: 300,
-      image: "https://media.istockphoto.com/id/1180869403/photo/traditional-french-cooked-provencal-vegetable-dish-ratatouille.jpg?s=612x612&w=0&k=20&c=ROYdUxbstfC9uqdsvvkhIa32RLhADNwjI5Qx__Rbk0M="
-    },
-    { id: 49, name: "French Onion Soup", category: "French", price: 150, calories: 280,
-      image: "https://www.onceuponachef.com/images/2019/02/french-onion-soup-1.jpg"
-    },
-    { id: 50, name: "Crème Brûlée", category: "French", price: 200, calories: 420,
-      image: "https://cdn.pixabay.com/photo/2018/06/22/14/44/creme-brulee-3490886_640.jpg"
-    },
-
-    // 🇦🇪 ARABIC
-    { id: 51, name: "Shawarma", category: "Arabic", price: 170, calories: 520,
-      image: "https://img.freepik.com/free-photo/side-view-chicken-roll-grilled-chicken-lettuce-cucumber-tomato-mayo-pita_141793-4849.jpg?semt=ais_hybrid&w=740&q=80"
-    },
-    { id: 52, name: "Falafel Platter", category: "Arabic", price: 140, calories: 450,
-      image: "https://media.istockphoto.com/id/955998652/photo/homemade-chickpea-hummus-bowl-with-pita-chips-and-paprika.jpg?s=612x612&w=0&k=20&c=H3m78rhd7113mc06CqBKLH4PVn7e8AUmTes2yCQEzlY="
-    },
-    { id: 53, name: "Hummus with Pita", category: "Arabic", price: 120, calories: 380,
-      image: "https://media.istockphoto.com/id/1150350496/photo/chickpea-hummus-with-falafel-and-pita-bread.jpg?s=612x612&w=0&k=20&c=zL3KnUc7fGS6qsx5T4WqNv-XxIz176qk630bl5pjJY8="
-    },
-    { id: 54, name: "Kabsa", category: "Arabic", price: 220, calories: 650,
-      image: "https://img.freepik.com/free-photo/plate-biryani-with-bowl-rice-bowl-food-table_505751-3814.jpg?semt=ais_hybrid&w=740&q=80"
-    },
-
-    // 🍰 DESSERTS
-    { id: 55, name: "Gulab Jamun", category: "Desserts", price: 60, calories: 300,
-      image: "https://media.istockphoto.com/id/521788423/photo/gulab-jamun.jpg?s=612x612&w=0&k=20&c=oMoXZUYPBZq_N8h9yqB16HsmGF4G-oEcRwEg-K8zZ0o="
-    },
-    { id: 56, name: "Rasmalai", category: "Desserts", price: 80, calories: 320,
-      image: "https://cdn.create.vista.com/api/media/small/156987234/stock-photo-save-download-preview-angoori-rasmalai-or-anguri-ras-malai-is-an-indian-dessert-made-from"
-    },
-
-    { id: 57, name: "Chocolate Milkshake", category: "Desserts", price: 120, calories: 450,
-      image: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?fm=jpg&q=60&w=3000"
-    },
-    { id: 58, name: "Soft Serve Ice Cream", category: "Desserts", price: 90, calories: 280,
-      image: "https://img.freepik.com/free-photo/close-up-hand-holding-ice-cream_23-2149005357.jpg"
-    },
-
-    { id: 59, name: "Tiramisu", category: "Desserts", price: 150, calories: 420,
-      image: "https://thumbs.dreamstime.com/b/tiramisu-glass-cup-top-view-high-angle-stone-plate-over-black-concrete-background-hand-teaspoon-eats-copy-space-146112090.jpg"
-    },
-    { id: 60, name: "Panna Cotta", category: "Desserts", price: 160, calories: 380,
-      image: "https://media.istockphoto.com/id/1255776846/photo/raspberry-panna-cotta-with-raspberry-jelly-italian-dessert-homemade-cuisine-copy-space.jpg?s=612x612&w=0&k=20&c=TU-mPAtTafCrWcxHrtAO-HjxMkcGgOoG5E6W5l9tJkg="
-    },
-
-    { id: 61, name: "Darsaan", category: "Desserts", price: 130, calories: 360,
-      image: "https://cookwithashu.wordpress.com/wp-content/uploads/2017/06/cymera_20170613_220919.jpg?w=645"
-    },
-    { id: 62, name: "Fried Ice Cream", category: "Desserts", price: 160, calories: 450,
-      image: "https://media.istockphoto.com/id/161322270/photo/mexican-desserts.jpg?s=612x612&w=0&k=20&c=zjEId7eWhVdHr8Ksi996MdnTYu2wH706Mw_oquhzIEk="
-    },
-
-    // 🍹 BEVERAGES
-    { id: 63, name: "Masala Chai", category: "Beverages", price: 40, calories: 120,
-      image: "https://media.istockphoto.com/id/1548592042/photo/traditional-middle-eastern-beverage-indian-drink-masala-or-arabian-karak-chai-copy-space.jpg?s=612x612&w=0&k=20&c=BqGP9UNqAnK_D0kVFnZG4q08AFz3nwhhPj7pmlppED0="
-    },
-    { id: 64, name: "Sweet Lassi", category: "Beverages", price: 60, calories: 250,
-      image: "https://media.istockphoto.com/id/1365859011/photo/drink-mango-lassi-in-two-glasses-on-rustic-concrete-table-with-fresh-ripe-cut-manfo-from-above.jpg?s=612x612&w=0&k=20&c=uHnr_0raQDe2sgUYHdP5GSa2raaj3ILG4m1cmFHtVJA="
-    },
-
-    { id: 65, name: "Coke", category: "Beverages", price: 40, calories: 140,
-      image: "https://images.unsplash.com/photo-1554866585-cd94860890b7?fm=jpg&q=60&w=3000"
-    },
-    { id: 66, name: "Cold Coffee", category: "Beverages", price: 90, calories: 220,
-      image: "https://images.pexels.com/photos/1193335/pexels-photo-1193335.jpeg?cs=srgb&dl=pexels-chiecharon-1193335.jpg&fm=jpg"
-    },
-
-    { id: 67, name: "Italian Soda", category: "Beverages", price: 100, calories: 180,
-      image: "https://media.istockphoto.com/id/476124338/photo/organic-fresh-italian-soda.jpg?s=612x612&w=0&k=20&c=whb917LDKXthr6nEdJeFXXgsgM7wcWAqGUgwYKNpsSw="
-    },
-    { id: 68, name: "Espresso", category: "Beverages", price: 80, calories: 20,
-      image: "https://thumbs.dreamstime.com/b/close-up-white-espresso-coffee-cup-smoke-above-wooden-plate-roasted-coffee-beans-white-marble-table-405912995.jpg"
-    },
-
-    { id: 69, name: "Jasmine Tea", category: "Beverages", price: 70, calories: 10,
-      image: "https://www.shutterstock.com/image-photo/cup-jasmine-tea-fresh-flowers-600nw-2480865003.jpg"
-    },
-    { id: 70, name: "Bubble Tea", category: "Beverages", price: 140, calories: 320,
-      image: "https://media.istockphoto.com/id/1954460241/photo/taiwan-milk-tea-with-boba-bubble-pearl-on-plastic-disposable-cup.jpg?s=612x612&w=0&k=20&c=SUCuvZS3ZkrXE8R-09utdtOC626W7Y0nYRHBLBuf1nc="
-    },
-  ];
-
-  const cuisines = [
-    { id: "Indian",     title: "Indian",     description: "Biryanis, dosas, curries and comfort food.",
-      image: "https://media.istockphoto.com/id/922783734/photo/assorted-indian-recipes-food-various.jpg?s=612x612&w=0&k=20&c=p8DepvymWfC5j7c6En2UsQ6sUM794SQMwceeBW3yQ9M="
-    },
-    { id: "Fast Food",  title: "Fast Food",  description: "Burgers, fries, fried chicken and more.",
-      image: "https://img.freepik.com/free-photo/top-view-fast-food-meal_23-2148273108.jpg"
-    },
-    { id: "Italian",    title: "Italian",    description: "Pizzas, pastas, lasagna and garlic bread.",
-      image: "https://media.istockphoto.com/id/1227415751/photo/full-table-of-italian-meals-on-plates-pizza-pasta-ravioli-carpaccio-caprese-salad-and-tomato.jpg?s=612x612&w=0&k=20&c=0qCRhYGQw0w6ahhVX-4ezayA9r81A81cwbPDbgRlC5s="
-    },
-    { id: "Chinese",    title: "Chinese",    description: "Noodles, fried rice, manchurian and more.",
-      image: "https://media.istockphoto.com/id/545286388/photo/chinese-food-blank-background.jpg?s=612x612&w=0&k=20&c=pqOIy07YKO5PlU5VxjscwTGRrrZ8PluKMUjSOz-II60="
-    },
-    { id: "Japanese",   title: "Japanese",   description: "Ramen, sushi, tempura and rice bowls.",
-      image: "https://media.istockphoto.com/id/508032520/photo/sushi-set-nigiri-and-sashimi-with-tea.jpg?s=612x612&w=0&k=20&c=-gNB5bYMSTumWI9D09XPcVuYEsuLxkVuJKUdp-2vGIc="
-    },
-    { id: "French",     title: "French",     description: "Bakes, soups and mains.",
-      image: "https://t3.ftcdn.net/jpg/06/60/79/28/360_F_660792870_FR4linXu1K5qL72g3QHoMV4amxrZn74Z.jpg"
-    },
-    { id: "Arabic",     title: "Arabic",     description: "Shawarma, falafel, hummus and kabsa.",
-      image: "https://www.shutterstock.com/image-photo/chicken-mandy-top-view-national-600nw-2282770611.jpg"
-    },
-    { id: "Desserts",   title: "Desserts",   description: "Sweet dishes from multiple cuisines.",
-      image: "https://t3.ftcdn.net/jpg/01/76/33/14/360_F_176331484_nLHY9EoW0ETwPZaS9OBXPGbCJhT70GZe.jpg"
-    },
-    { id: "Beverages",  title: "Beverages",  description: "Hot and cold drinks to match every meal.",
-      image: "https://static.vecteezy.com/system/resources/thumbnails/026/500/574/small/summer-refreshing-beverages-photo.jpg"
-    }
-  ];
 
   let currentCuisine = null;
   let cart = [];
@@ -2158,11 +1929,13 @@
 
   // --------- INITIAL RENDER ---------
 
-  renderMenu();
-  updateCart();
-  updateLoyaltyUI();
-  renderCalories();
-  renderMostOrdered();
+loadMenuFromServer();
+updateCart();
+updateLoyaltyUI();
+renderCalories();
+renderMostOrdered();
+
+
 </script>
 
 </body>
